@@ -7,16 +7,16 @@ struct SessionTrackerView: View {
     @State private var isPresentingObjectiveSheet = false
     @State private var showFullScreenTimer = false
     @Namespace private var sessionTimerNamespace
-
+    
     static let sessionTimerTransitionID = "session-timer-card"
-
+    
     init(viewModel: SessionTrackerViewModel) {
         _viewModel = State(initialValue: viewModel)
     }
-
+    
     var body: some View {
         @Bindable var bindableViewModel = viewModel
-
+        
         NavigationStack {
             List {
                 Section {
@@ -26,7 +26,7 @@ struct SessionTrackerView: View {
                 }
                 .textCase(nil)
                 .listSectionSeparator(.hidden)
-
+                
                 Section {
                     SessionTimerView(viewModel: bindableViewModel) {
                         bindableViewModel.startSession()
@@ -44,7 +44,7 @@ struct SessionTrackerView: View {
                 }
                 .textCase(nil)
                 .listSectionSeparator(.hidden)
-
+                
                 ActivityFeedView(
                     sections: activitySections(for: bindableViewModel),
                     emptyStateMessage: "No sessions logged yet.",
@@ -123,17 +123,17 @@ struct SessionTrackerView: View {
             }
         }
     }
-
+    
     private func objectivesSection(viewModel: SessionTrackerViewModel) -> some View {
         let pages = objectivePages(for: viewModel)
-
+        
         let cardHeight = pages.map { objectiveCardHeight(for: $0.count) }.max() ?? objectiveCardHeight(for: 0)
-
+        
         return VStack(alignment: .leading, spacing: 12) {
             Text("Objectives")
                 .font(.headline)
                 .foregroundStyle(.primary)
-
+            
             if pages.isEmpty {
                 Button {
                     isPresentingObjectiveSheet = true
@@ -155,7 +155,7 @@ struct SessionTrackerView: View {
             }
         }
     }
-
+    
     private func objectiveCardHeight(for count: Int) -> CGFloat {
         if count <= 0 {
             return 200
@@ -165,12 +165,12 @@ struct SessionTrackerView: View {
         }
         return 320
     }
-
+    
     private func objectivePages(for viewModel: SessionTrackerViewModel) -> [[Objective]] {
         let chunkSize = 4
         var chunks: [[Objective]] = []
         var current: [Objective] = []
-
+        
         for objective in viewModel.objectives {
             current.append(objective)
             if current.count == chunkSize {
@@ -181,17 +181,17 @@ struct SessionTrackerView: View {
         if !current.isEmpty {
             chunks.append(current)
         }
-
+        
         return chunks
     }
-
+    
     private func activitySections(for viewModel: SessionTrackerViewModel) -> [ActivityFeedSection] {
         guard !viewModel.activities.isEmpty else { return [] }
-
+        
         let grouped = Dictionary(grouping: viewModel.activities) { activity -> Date in
             calendar.startOfDay(for: activity.date)
         }
-
+        
         let sortedDays = grouped.keys.sorted(by: >)
         return sortedDays.compactMap { day in
             guard let activities = grouped[day]?.sorted(by: { $0.date > $1.date }) else { return nil }
@@ -199,11 +199,11 @@ struct SessionTrackerView: View {
             return ActivityFeedSection(id: day, title: title, activities: activities)
         }
     }
-
+    
     private func title(for day: Date) -> String {
         if calendar.isDateInToday(day) { return "Today" }
         if calendar.isDateInYesterday(day) { return "Yesterday" }
-
+        
         let formatter = DateFormatter()
         formatter.calendar = calendar
         formatter.dateStyle = .medium
@@ -211,152 +211,6 @@ struct SessionTrackerView: View {
         return formatter.string(from: day)
     }
 }
-
-private struct ActivityLinkSheet: View {
-    let objectives: [Objective]
-    @State var draft: SessionTrackerViewModel.ActivityDraft
-    let onSelectObjective: (UUID?) -> Void
-    let onChangeNote: (String) -> Void
-    let onChangeTags: (String) -> Void
-    let onSave: () -> Void
-    let onDiscard: () -> Void
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section("Linked Objective") {
-                    Picker("Objective", selection: selectionBinding) {
-                        Text("None").tag(UUID?.none)
-                        ForEach(objectives) { objective in
-                            Text(objective.title).tag(UUID?.some(objective.id))
-                        }
-                    }
-                    .pickerStyle(.navigationLink)
-                }
-
-                Section("Notes") {
-                    TextField("Reflection", text: noteBinding, axis: .vertical)
-                        .lineLimit(3, reservesSpace: true)
-                }
-
-                Section("Tags") {
-                    TextField("Comma separated", text: tagsBinding)
-                }
-
-                Section {
-                    Button("Save Session") {
-                        onSave()
-                    }
-                    Button("Discard", role: .destructive) {
-                        onDiscard()
-                    }
-                }
-            }
-            .navigationTitle("Link Session")
-            .navigationBarTitleDisplayMode(.inline)
-        }
-    }
-
-    private var selectionBinding: Binding<UUID?> {
-        Binding<UUID?>(
-            get: { draft.selectedObjectiveID },
-            set: { newValue in
-                draft.selectedObjectiveID = newValue
-                onSelectObjective(newValue)
-            }
-        )
-    }
-
-    private var noteBinding: Binding<String> {
-        Binding<String>(
-            get: { draft.note },
-            set: { newValue in
-                draft.note = newValue
-                onChangeNote(newValue)
-            }
-        )
-    }
-
-    private var tagsBinding: Binding<String> {
-        Binding<String>(
-            get: { draft.tagsText },
-            set: { newValue in
-                draft.tagsText = newValue
-                onChangeTags(newValue)
-            }
-        )
-    }
-}
-
-private struct ObjectivesPlaceholderCard: View {
-    var body: some View {
-        RoundedRectangle(cornerRadius: 24, style: .continuous)
-            .fill(.thickMaterial)
-            .overlay(
-                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .stroke(style: StrokeStyle(lineWidth: 1.5, dash: [6, 6]))
-                    .foregroundStyle(Color.primary.opacity(0.2))
-            )
-            .overlay(
-                VStack(spacing: 8) {
-                    Image(systemName: "plus.circle")
-                        .font(.system(size: 28, weight: .semibold))
-                        .foregroundStyle(.tint)
-                    Text("Create Objective")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-            )
-            .frame(height: 180)
-    }
-}
-
-private struct AddObjectiveSheet: View {
-    @State private var title: String = ""
-    @State private var unit: String = "hours"
-    @State private var targetText: String = ""
-    let onSave: (String, String, Double?) -> Void
-    let onCancel: () -> Void
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section("Objective") {
-                    TextField("Title", text: $title)
-                    TextField("Unit", text: $unit)
-                }
-
-                Section("Target") {
-                    TextField("Target amount", text: $targetText)
-                        .keyboardType(.decimalPad)
-                    Text("Use the same unit as above (e.g. hours, sessions)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .navigationTitle("New Objective")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel", action: onCancel)
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        onSave(title, unit, parsedTarget)
-                    }
-                    .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                }
-            }
-        }
-    }
-
-    private var parsedTarget: Double? {
-        let trimmed = targetText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return nil }
-        return Double(trimmed.replacingOccurrences(of: ",", with: "."))
-    }
-}
-
 //#Preview("Session Tracker") {
 //    SessionTrackerView(viewModel: .preview)
 //}
