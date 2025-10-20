@@ -14,6 +14,7 @@ struct ActivityFeedView: View {
     let emptyStateMessage: String
     let titleProvider: TitleProvider
     let durationFormatter: DurationFormatter
+    let colorProvider: ((Activity) -> Color?)?
     let onSelect: ((Activity) -> Void)?
     let onDelete: ((Activity) -> Void)?
 
@@ -22,6 +23,7 @@ struct ActivityFeedView: View {
         emptyStateMessage: String,
         titleProvider: @escaping TitleProvider,
         durationFormatter: @escaping DurationFormatter,
+        colorProvider: ((Activity) -> Color?)? = nil,
         onSelect: ((Activity) -> Void)? = nil,
         onDelete: ((Activity) -> Void)? = nil
     ) {
@@ -29,6 +31,7 @@ struct ActivityFeedView: View {
         self.emptyStateMessage = emptyStateMessage
         self.titleProvider = titleProvider
         self.durationFormatter = durationFormatter
+        self.colorProvider = colorProvider
         self.onSelect = onSelect
         self.onDelete = onDelete
     }
@@ -67,7 +70,8 @@ struct ActivityFeedView: View {
                                 },
                                 onTap: {
                                     onSelect?(activity)
-                                }
+                                },
+                                accentColor: colorProvider?(activity)
                             )
                             .listRowInsets(EdgeInsets(top: 4, leading: 20, bottom: 4, trailing: 20))
                             .listRowBackground(Color.clear)

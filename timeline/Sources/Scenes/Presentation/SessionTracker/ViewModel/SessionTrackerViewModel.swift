@@ -82,16 +82,27 @@ final class SessionTrackerViewModel {
         haptics.triggerNotification(.warning)
     }
 
-    func addObjective(title: String, unit: String, target: Double?) {
-        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedUnit = unit.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        guard !trimmedTitle.isEmpty else { return }
-        let normalizedUnit = trimmedUnit.isEmpty ? "hours" : trimmedUnit
-
-        repository.createObjective(title: trimmedTitle, unit: normalizedUnit, target: target)
-        objectives = repository.loadObjectives()
-        objectiveTargets = repository.loadObjectiveTargets()
+    func handleObjectiveSubmission(_ submission: ObjectiveFormSubmission) {
+        if let id = submission.id, let index = objectives.firstIndex(where: { $0.id == id }) {
+            var updated = objectives[index]
+            updated.title = submission.title
+            updated.unit = submission.unit
+            updated.colorHex = submission.colorHex
+            updated.keyResults = submission.keyResults
+            objectives[index] = updated
+            repository.upsertObjective(updated)
+            applyTargetSubmission(submission.target, for: id)
+        } else {
+            let objective = repository.createObjective(
+                title: submission.title,
+                unit: submission.unit,
+                target: submission.target,
+                colorHex: submission.colorHex,
+                keyResults: submission.keyResults
+            )
+            objectives = repository.loadObjectives()
+            objectiveTargets = repository.loadObjectiveTargets()
+        }
     }
 
     func saveDraft(now: Date = .now) {
@@ -176,6 +187,15 @@ final class SessionTrackerViewModel {
         return objective.title
     }
 
+    func objective(withID id: UUID) -> Objective? {
+        objectives.first(where: { $0.id == id })
+    }
+
+    func colorHex(for objectiveID: UUID?) -> String? {
+        guard let id = objectiveID, let objective = objective(withID: id) else { return nil }
+        return objective.colorHex
+    }
+
     func formattedDuration(_ duration: TimeInterval) -> String {
         let totalSeconds = Int(duration.rounded())
         let hours = totalSeconds / 3600
@@ -209,9 +229,23 @@ final class SessionTrackerViewModel {
         min(max(objective.progress, 0), 1)
     }
 
+    func targetValue(for objectiveID: UUID) -> Double? {
+        objectiveTargets[objectiveID]
+    }
+
     func setObjectiveTarget(_ value: Double, for objectiveID: UUID) {
         objectiveTargets[objectiveID] = value
         repository.setObjectiveTarget(value, for: objectiveID)
+    }
+
+    private func applyTargetSubmission(_ value: Double?, for objectiveID: UUID) {
+        if let value {
+            objectiveTargets[objectiveID] = value
+            repository.setObjectiveTarget(value, for: objectiveID)
+        } else {
+            objectiveTargets.removeValue(forKey: objectiveID)
+            repository.clearObjectiveTarget(for: objectiveID)
+        }
     }
 
     private func adjustProgress(for objectiveID: UUID, duration: TimeInterval, adding: Bool) {
@@ -246,11 +280,51 @@ final class SessionTrackerViewModel {
 
 extension SessionTrackerViewModel {
     static var preview: SessionTrackerViewModel {
-        let deepWork = Objective(title: "Deep Work", progress: 0.45, unit: "hours")
-        let learning = Objective(title: "Learning", progress: 0.3, unit: "hours")
-        let recovery = Objective(title: "Recovery", progress: 0.8, unit: "sessions")
-        let movement = Objective(title: "Movement", progress: 0.6, unit: "hours")
-        let experimentation = Objective(title: "Build", progress: 0.15, unit: "sessions")
+        let deepWork = Objective(
+            title: "Deep Work",
+            progress: 0.45,
+            unit: "hours",
+            colorHex: "#6366F1",
+            keyResults: [
+                KeyResult(title: "Ship three features", targetDescription: "3 features", currentValue: "1 shipped")
+            ]
+        )
+        let learning = Objective(
+            title: "Learning",
+            progress: 0.3,
+            unit: "hours",
+            colorHex: "#22C55E",
+            keyResults: [
+                KeyResult(title: "Finish design course", targetDescription: "12 lessons", currentValue: "5 complete")
+            ]
+        )
+        let recovery = Objective(
+            title: "Recovery",
+            progress: 0.8,
+            unit: "sessions",
+            colorHex: "#F59E0B",
+            keyResults: [
+                KeyResult(title: "Sleep 56 hours", targetDescription: "56h per week", currentValue: "44h logged")
+            ]
+        )
+        let movement = Objective(
+            title: "Movement",
+            progress: 0.6,
+            unit: "hours",
+            colorHex: "#14B8A6",
+            keyResults: [
+                KeyResult(title: "Run 20km", targetDescription: "20km", currentValue: "8km")
+            ]
+        )
+        let experimentation = Objective(
+            title: "Build",
+            progress: 0.15,
+            unit: "sessions",
+            colorHex: "#EC4899",
+            keyResults: [
+                KeyResult(title: "Prototype new idea", targetDescription: "1 prototype")
+            ]
+        )
 
         let calendar = Calendar.current
         let today = Date()

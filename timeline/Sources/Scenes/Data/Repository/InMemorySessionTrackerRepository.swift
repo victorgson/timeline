@@ -40,6 +40,10 @@ final class InMemorySessionTrackerRepository: SessionTrackerRepository {
         targetsStorage[objectiveID] = value
     }
 
+    func clearObjectiveTarget(for objectiveID: UUID) {
+        targetsStorage.removeValue(forKey: objectiveID)
+    }
+
     func recordActivity(_ activity: Activity) {
         activitiesStorage.insert(activity, at: 0)
     }
@@ -58,8 +62,20 @@ final class InMemorySessionTrackerRepository: SessionTrackerRepository {
     }
 
     @discardableResult
-    func createObjective(title: String, unit: String, target: Double?) -> Objective {
-        let objective = Objective(title: title, progress: 0, unit: unit)
+    func createObjective(
+        title: String,
+        unit: String,
+        target: Double?,
+        colorHex: String?,
+        keyResults: [KeyResult]
+    ) -> Objective {
+        let objective = Objective(
+            title: title,
+            progress: 0,
+            unit: unit,
+            colorHex: colorHex,
+            keyResults: keyResults
+        )
         objectivesStorage.append(objective)
         if let target {
             targetsStorage[objective.id] = target

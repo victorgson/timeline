@@ -5,6 +5,7 @@ struct SessionTrackerView: View {
     @State private var viewModel: SessionTrackerViewModel
     private let calendar = Calendar.current
     @State private var isPresentingObjectiveSheet = false
+    @State private var objectiveSheetViewModel = AddObjectiveSheetViewModel()
     @State private var showFullScreenTimer = false
     @Namespace private var sessionTimerNamespace
     
@@ -53,6 +54,10 @@ struct SessionTrackerView: View {
                     },
                     durationFormatter: { duration in
                         bindableViewModel.formattedDuration(duration)
+                    },
+                    colorProvider: { activity in
+                        guard let hex = bindableViewModel.colorHex(for: activity.linkedObjectiveID) else { return nil }
+                        return Color(hex: hex)
                     },
                     onSelect: { activity in
                         bindableViewModel.editActivity(activity)
@@ -103,11 +108,13 @@ struct SessionTrackerView: View {
             }
         }
         .sheet(isPresented: $isPresentingObjectiveSheet) {
-            AddObjectiveSheet { title, unit, target in
-                bindableViewModel.addObjective(title: title, unit: unit, target: target)
+            AddObjectiveSheet(viewModel: objectiveSheetViewModel) { submission in
+                bindableViewModel.handleObjectiveSubmission(submission)
                 isPresentingObjectiveSheet = false
+                objectiveSheetViewModel = AddObjectiveSheetViewModel()
             } onCancel: {
                 isPresentingObjectiveSheet = false
+                objectiveSheetViewModel = AddObjectiveSheetViewModel()
             }
         }
         .onChange(of: bindableViewModel.isTimerRunning) { running in
@@ -126,13 +133,25 @@ struct SessionTrackerView: View {
 
             if viewModel.objectives.isEmpty {
                 AddObjectiveCircleButton {
+                    objectiveSheetViewModel = AddObjectiveSheetViewModel()
                     isPresentingObjectiveSheet = true
                 }
                 .padding(.horizontal, 20)
             } else {
                 ObjectiveCardView(
                     objectives: viewModel.objectives,
-                    onAddObjective: { isPresentingObjectiveSheet = true }
+                    onAddObjective: {
+                        objectiveSheetViewModel = AddObjectiveSheetViewModel()
+                        isPresentingObjectiveSheet = true
+                    },
+                    onSelectObjective: { objective in
+                        objectiveSheetViewModel = AddObjectiveSheetViewModel(
+                            mode: .edit(objective),
+                            initialTarget: viewModel.targetValue(for: objective.id),
+                            defaultColor: ObjectiveColorProvider.color(for: objective)
+                        )
+                        isPresentingObjectiveSheet = true
+                    }
                 )
             }
         }

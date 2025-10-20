@@ -2,7 +2,13 @@ import SwiftUI
 
 struct ObjectiveRingView: View {
     let objective: Objective
+    let onTap: (() -> Void)?
     private let ringLineWidth: Double = 11
+
+    init(objective: Objective, onTap: (() -> Void)? = nil) {
+        self.objective = objective
+        self.onTap = onTap
+    }
 
     var body: some View {
         VStack(spacing: 8) {
@@ -42,6 +48,10 @@ struct ObjectiveRingView: View {
                 .minimumScaleFactor(0.85)
         }
         .frame(width: 96)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onTap?()
+        }
     }
 
     private var progress: Double {
@@ -53,14 +63,6 @@ struct ObjectiveRingView: View {
     }
 
     private var color: Color {
-        ObjectiveRingPalette.color(for: objective)
-    }
-}
-
-private enum ObjectiveRingPalette {
-    static func color(for objective: Objective) -> Color {
-        let palette: [Color] = [.pink, .orange, .mint, .blue, .purple, .teal]
-        let index = abs(objective.id.hashValue) % palette.count
-        return palette[index]
+        ObjectiveColorProvider.color(for: objective)
     }
 }

@@ -5,17 +5,42 @@ struct Objective: Identifiable, Hashable {
     var title: String
     var progress: Double
     var unit: String
+    var colorHex: String?
+    var keyResults: [KeyResult]
 
     init(
         id: UUID = UUID(),
         title: String,
         progress: Double = 0,
-        unit: String
+        unit: String,
+        colorHex: String? = nil,
+        keyResults: [KeyResult] = []
     ) {
         self.id = id
         self.title = title
         self.progress = progress
         self.unit = unit
+        self.colorHex = colorHex
+        self.keyResults = keyResults
+    }
+}
+
+struct KeyResult: Identifiable, Hashable {
+    let id: UUID
+    var title: String
+    var targetDescription: String?
+    var currentValue: String?
+
+    init(
+        id: UUID = UUID(),
+        title: String,
+        targetDescription: String? = nil,
+        currentValue: String? = nil
+    ) {
+        self.id = id
+        self.title = title
+        self.targetDescription = targetDescription
+        self.currentValue = currentValue
     }
 }
 

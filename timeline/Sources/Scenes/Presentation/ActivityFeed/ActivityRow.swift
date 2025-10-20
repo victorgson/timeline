@@ -7,6 +7,7 @@ struct ActivityRow: View {
     let timeText: String
     let onDelete: (() -> Void)?
     let onTap: (() -> Void)?
+    let accentColor: Color?
 
     init(
         activity: Activity,
@@ -14,7 +15,8 @@ struct ActivityRow: View {
         durationText: String,
         timeText: String,
         onDelete: (() -> Void)? = nil,
-        onTap: (() -> Void)? = nil
+        onTap: (() -> Void)? = nil,
+        accentColor: Color? = nil
     ) {
         self.activity = activity
         self.title = title
@@ -22,11 +24,21 @@ struct ActivityRow: View {
         self.timeText = timeText
         self.onDelete = onDelete
         self.onTap = onTap
+        self.accentColor = accentColor
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .firstTextBaseline) {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                if let accentColor {
+                    Circle()
+                        .fill(accentColor)
+                        .frame(width: 10, height: 10)
+                        .alignmentGuide(.firstTextBaseline) { dimensions in
+                            dimensions[VerticalAlignment.center]
+                        }
+                }
+
                 Text(title)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.primary)
