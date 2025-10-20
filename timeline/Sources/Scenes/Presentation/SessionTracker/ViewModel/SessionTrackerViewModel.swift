@@ -5,11 +5,16 @@ import Observation
 @Observable
 final class SessionTrackerViewModel {
     struct ActivityDraft {
+        var originalActivity: Activity?
         var startedAt: Date
         var duration: TimeInterval
         var selectedObjectiveID: UUID?
         var note: String
         var tagsText: String
+
+        var isEditing: Bool {
+            originalActivity != nil
+        }
     }
 
     private let repository: SessionTrackerRepository
@@ -51,6 +56,7 @@ final class SessionTrackerViewModel {
         guard duration > 0 else { return }
 
         activityDraft = ActivityDraft(
+            originalActivity: nil,
             startedAt: start,
             duration: duration,
             selectedObjectiveID: nil,
@@ -69,13 +75,8 @@ final class SessionTrackerViewModel {
         repository.removeActivity(withID: activity.id)
         activities = repository.loadActivities()
 
-        if let objectiveID = activity.linkedObjectiveID,
-           let index = objectives.firstIndex(where: { $0.id == objectiveID }) {
-            let target = objectiveTargets[objectiveID] ?? defaultTarget(for: objectives[index])
-            guard target > 0 else { return }
-            let decrement = activity.duration / target
-            objectives[index].progress = max(0, objectives[index].progress - decrement)
-            repository.upsertObjective(objectives[index])
+        if let objectiveID = activity.linkedObjectiveID {
+            adjustProgress(for: objectiveID, duration: activity.duration, adding: false)
         }
 
         haptics.triggerNotification(.warning)
@@ -106,6 +107,7 @@ final class SessionTrackerViewModel {
 
         let note = draft.note.trimmingCharacters(in: .whitespacesAndNewlines)
         let activity = Activity(
+            id: draft.originalActivity?.id ?? UUID(),
             date: draft.startedAt,
             duration: draft.duration,
             linkedObjectiveID: draft.selectedObjectiveID,
@@ -113,12 +115,25 @@ final class SessionTrackerViewModel {
             tags: tags
         )
 
-        repository.recordActivity(activity)
-        activities = repository.loadActivities()
+        if let original = draft.originalActivity {
+            repository.updateActivity(activity)
 
-        if let objectiveID = draft.selectedObjectiveID {
-            updateProgress(for: objectiveID, additionalDuration: draft.duration)
+            if let originalObjective = original.linkedObjectiveID {
+                adjustProgress(for: originalObjective, duration: original.duration, adding: false)
+            }
+
+            if let newObjective = activity.linkedObjectiveID {
+                adjustProgress(for: newObjective, duration: activity.duration, adding: true)
+            }
+        } else {
+            repository.recordActivity(activity)
+
+            if let objectiveID = draft.selectedObjectiveID {
+                adjustProgress(for: objectiveID, duration: draft.duration, adding: true)
+            }
         }
+
+        activities = repository.loadActivities()
 
         activityDraft = nil
         haptics.triggerNotification(.success)
@@ -140,6 +155,17 @@ final class SessionTrackerViewModel {
         guard var draft = activityDraft else { return }
         draft.tagsText = tags
         activityDraft = draft
+    }
+
+    func editActivity(_ activity: Activity) {
+        activityDraft = ActivityDraft(
+            originalActivity: activity,
+            startedAt: activity.date,
+            duration: activity.duration,
+            selectedObjectiveID: activity.linkedObjectiveID,
+            note: activity.note ?? "",
+            tagsText: activity.tags.joined(separator: ", ")
+        )
     }
 
     func label(for activity: Activity, calendar: Calendar = .current) -> String {
@@ -188,14 +214,18 @@ final class SessionTrackerViewModel {
         repository.setObjectiveTarget(value, for: objectiveID)
     }
 
-    private func updateProgress(for objectiveID: UUID, additionalDuration: TimeInterval) {
+    private func adjustProgress(for objectiveID: UUID, duration: TimeInterval, adding: Bool) {
         guard let index = objectives.firstIndex(where: { $0.id == objectiveID }) else { return }
 
         let target = objectiveTargets[objectiveID] ?? defaultTarget(for: objectives[index])
         guard target > 0 else { return }
 
-        let increment = additionalDuration / target
-        objectives[index].progress = min(1, objectives[index].progress + increment)
+        let delta = duration / target
+        if adding {
+            objectives[index].progress = min(1, objectives[index].progress + delta)
+        } else {
+            objectives[index].progress = max(0, objectives[index].progress - delta)
+        }
         repository.upsertObjective(objectives[index])
     }
 

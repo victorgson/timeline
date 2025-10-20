@@ -2,29 +2,28 @@ import SwiftUI
 
 struct ObjectiveCardView: View {
     let objectives: [Objective]
-    
-    private let columns: [GridItem] = [
-        GridItem(.flexible(), spacing: 18),
-        GridItem(.flexible(), spacing: 18)
-    ]
-    
+    let onAddObjective: () -> Void
+
     var body: some View {
-        RoundedRectangle(cornerRadius: 24, style: .continuous)
-            .fill(.ultraThinMaterial)
-            .overlay(
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(objectives) { objective in
-                        ObjectiveRingView(objective: objective)
-                    }
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 16) {
+                ForEach(objectives) { objective in
+                    ObjectiveRingView(objective: objective)
                 }
-                    .padding(24)
-            )
-            .frame(maxWidth: .infinity)
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 4)
+                AddObjectiveCircleButton(action: onAddObjective)
+            }
+            .padding(.vertical, 8)
+        }
+        .scrollIndicators(.hidden)
+        .scrollClipDisabled()
+        .contentMargins(.horizontal, 20, for: .scrollContent)
     }
 }
 //#Preview("Objectives Card") {
-//    ObjectiveCardView(objectives: Array(SessionTrackerViewModel.preview.objectives.prefix(4)))
+//    ObjectiveCardView(
+//        objectives: Array(SessionTrackerViewModel.preview.objectives.prefix(4)),
+//        onAddObjective: {}
+//    )
 //        .padding()
 //        .background(Color(.systemGroupedBackground))
 //}

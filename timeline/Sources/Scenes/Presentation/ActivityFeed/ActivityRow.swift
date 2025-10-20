@@ -6,6 +6,23 @@ struct ActivityRow: View {
     let durationText: String
     let timeText: String
     let onDelete: (() -> Void)?
+    let onTap: (() -> Void)?
+
+    init(
+        activity: Activity,
+        title: String,
+        durationText: String,
+        timeText: String,
+        onDelete: (() -> Void)? = nil,
+        onTap: (() -> Void)? = nil
+    ) {
+        self.activity = activity
+        self.title = title
+        self.durationText = durationText
+        self.timeText = timeText
+        self.onDelete = onDelete
+        self.onTap = onTap
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -40,6 +57,9 @@ struct ActivityRow: View {
                 .fill(Color(.secondarySystemGroupedBackground))
         )
         .contentShape(Rectangle())
+        .onTapGesture {
+            onTap?()
+        }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             if let onDelete {
                 Button(role: .destructive, action: onDelete) {

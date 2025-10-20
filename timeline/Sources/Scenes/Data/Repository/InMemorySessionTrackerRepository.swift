@@ -44,6 +44,15 @@ final class InMemorySessionTrackerRepository: SessionTrackerRepository {
         activitiesStorage.insert(activity, at: 0)
     }
 
+    func updateActivity(_ activity: Activity) {
+        if let index = activitiesStorage.firstIndex(where: { $0.id == activity.id }) {
+            activitiesStorage[index] = activity
+            activitiesStorage.sort { $0.date > $1.date }
+        } else {
+            recordActivity(activity)
+        }
+    }
+
     func removeActivity(withID id: UUID) {
         activitiesStorage.removeAll { $0.id == id }
     }

@@ -21,7 +21,7 @@ struct SessionTrackerView: View {
             List {
                 Section {
                     objectivesSection(viewModel: bindableViewModel)
-                        .listRowInsets(EdgeInsets(top: 24, leading: 20, bottom: 8, trailing: 20))
+                        .listRowInsets(EdgeInsets(top: 24, leading: 0, bottom: 8, trailing: 0))
                         .listRowBackground(Color.clear)
                 }
                 .textCase(nil)
@@ -54,6 +54,9 @@ struct SessionTrackerView: View {
                     durationFormatter: { duration in
                         bindableViewModel.formattedDuration(duration)
                     },
+                    onSelect: { activity in
+                        bindableViewModel.editActivity(activity)
+                    },
                     onDelete: { activity in
                         bindableViewModel.deleteActivity(activity)
                     }
@@ -63,16 +66,6 @@ struct SessionTrackerView: View {
             .scrollContentBackground(.hidden)
             .background(Color(.systemGroupedBackground))
             .navigationTitle("Sessions")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        isPresentingObjectiveSheet = true
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                    .accessibilityLabel("Add Objective")
-                }
-            }
             .navigationDestination(isPresented: $showFullScreenTimer) {
                 SessionDetailView(
                     viewModel: bindableViewModel,
@@ -125,66 +118,26 @@ struct SessionTrackerView: View {
     }
     
     private func objectivesSection(viewModel: SessionTrackerViewModel) -> some View {
-        let pages = objectivePages(for: viewModel)
-        
-        let cardHeight = pages.map { objectiveCardHeight(for: $0.count) }.max() ?? objectiveCardHeight(for: 0)
-        
         return VStack(alignment: .leading, spacing: 12) {
             Text("Objectives")
                 .font(.headline)
                 .foregroundStyle(.primary)
-            
-            if pages.isEmpty {
-                Button {
+                .padding(.horizontal, 20)
+
+            if viewModel.objectives.isEmpty {
+                AddObjectiveCircleButton {
                     isPresentingObjectiveSheet = true
-                } label: {
-                    ObjectivesPlaceholderCard()
                 }
-                .buttonStyle(.plain)
+                .padding(.horizontal, 20)
             } else {
-                TabView {
-                    ForEach(pages.indices, id: \.self) { index in
-                        ObjectiveCardView(objectives: pages[index])
-                            .padding(.vertical, 4)
-                            .padding(.horizontal, 2)
-                            .frame(height: cardHeight)
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: pages.count > 1 ? .automatic : .never))
-                .frame(height: cardHeight)
+                ObjectiveCardView(
+                    objectives: viewModel.objectives,
+                    onAddObjective: { isPresentingObjectiveSheet = true }
+                )
             }
         }
     }
-    
-    private func objectiveCardHeight(for count: Int) -> CGFloat {
-        if count <= 0 {
-            return 200
-        }
-        if count <= 2 {
-            return 200
-        }
-        return 320
-    }
-    
-    private func objectivePages(for viewModel: SessionTrackerViewModel) -> [[Objective]] {
-        let chunkSize = 4
-        var chunks: [[Objective]] = []
-        var current: [Objective] = []
-        
-        for objective in viewModel.objectives {
-            current.append(objective)
-            if current.count == chunkSize {
-                chunks.append(current)
-                current = []
-            }
-        }
-        if !current.isEmpty {
-            chunks.append(current)
-        }
-        
-        return chunks
-    }
-    
+
     private func activitySections(for viewModel: SessionTrackerViewModel) -> [ActivityFeedSection] {
         guard !viewModel.activities.isEmpty else { return [] }
         

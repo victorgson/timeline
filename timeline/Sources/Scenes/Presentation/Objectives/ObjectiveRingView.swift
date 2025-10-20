@@ -5,11 +5,11 @@ struct ObjectiveRingView: View {
     private let ringLineWidth: Double = 11
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 8) {
             ZStack {
                 Circle()
                     .stroke(style: StrokeStyle(lineWidth: ringLineWidth, lineCap: .round))
-                    .foregroundStyle(Color.primary.opacity(0.1))
+                    .foregroundStyle(Color.white.opacity(0.12))
                 Circle()
                     .trim(from: 0, to: CGFloat(progress))
                     .stroke(
@@ -24,29 +24,24 @@ struct ObjectiveRingView: View {
 
                 VStack(spacing: 2) {
                     Text(percentageText)
-                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
                         .monospacedDigit()
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(.white)
                     Text(objective.unit)
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.white.opacity(0.7))
                 }
             }
-            .frame(width: 90, height: 90)
+            .frame(width: 88, height: 88)
 
-            VStack(spacing: 4) {
-                Text(objective.title)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.primary)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.85)
-                ProgressView(value: progress)
-                    .tint(color)
-            }
+            Text(objective.title)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.white)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.85)
         }
-        .frame(maxWidth: .infinity)
+        .frame(width: 96)
     }
 
     private var progress: Double {

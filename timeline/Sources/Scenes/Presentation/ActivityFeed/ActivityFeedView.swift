@@ -14,7 +14,24 @@ struct ActivityFeedView: View {
     let emptyStateMessage: String
     let titleProvider: TitleProvider
     let durationFormatter: DurationFormatter
+    let onSelect: ((Activity) -> Void)?
     let onDelete: ((Activity) -> Void)?
+
+    init(
+        sections: [ActivityFeedSection],
+        emptyStateMessage: String,
+        titleProvider: @escaping TitleProvider,
+        durationFormatter: @escaping DurationFormatter,
+        onSelect: ((Activity) -> Void)? = nil,
+        onDelete: ((Activity) -> Void)? = nil
+    ) {
+        self.sections = sections
+        self.emptyStateMessage = emptyStateMessage
+        self.titleProvider = titleProvider
+        self.durationFormatter = durationFormatter
+        self.onSelect = onSelect
+        self.onDelete = onDelete
+    }
 
     private var timeFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -47,6 +64,9 @@ struct ActivityFeedView: View {
                                 timeText: timeFormatter.string(from: activity.date),
                                 onDelete: {
                                     onDelete?(activity)
+                                },
+                                onTap: {
+                                    onSelect?(activity)
                                 }
                             )
                             .listRowInsets(EdgeInsets(top: 4, leading: 20, bottom: 4, trailing: 20))
