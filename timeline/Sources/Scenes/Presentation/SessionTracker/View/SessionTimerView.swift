@@ -1,32 +1,32 @@
 import SwiftUI
 import Observation
 
-struct FocusTimerView: View {
-    @Bindable var viewModel: FocusTrackerViewModel
-    let onStartFocus: () -> Void
+struct SessionTimerView: View {
+    @Bindable var viewModel: SessionTrackerViewModel
+    let onStartSession: () -> Void
 
-    init(viewModel: FocusTrackerViewModel, onStartFocus: @escaping () -> Void) {
+    init(viewModel: SessionTrackerViewModel, onStartSession: @escaping () -> Void) {
         self.viewModel = viewModel
-        self.onStartFocus = onStartFocus
+        self.onStartSession = onStartSession
     }
 
     var body: some View {
         if viewModel.isTimerRunning, let start = viewModel.activeSessionStartDate {
             TimelineView(.periodic(from: start, by: 1)) { timeline in
-                ActiveFocusCard(
+                ActiveSessionCard(
                     elapsedText: viewModel.formattedTimer(timeline.date.timeIntervalSince(start)),
-                    stopAction: { viewModel.stopFocus(now: timeline.date) }
+                    stopAction: { viewModel.stopSession(now: timeline.date) }
                 )
             }
             .frame(maxWidth: .infinity)
         } else {
-            InactiveFocusCard(action: onStartFocus)
+            InactiveSessionCard(action: onStartSession)
                 .frame(maxWidth: .infinity)
         }
     }
 }
 
-private struct InactiveFocusCard: View {
+private struct InactiveSessionCard: View {
     let action: () -> Void
 
     var body: some View {
@@ -35,10 +35,10 @@ private struct InactiveFocusCard: View {
                 Image(systemName: "moon.zzz")
                     .font(.system(size: 28, weight: .semibold))
                     .foregroundStyle(.tint)
-                Text("Start Focus")
+                Text("Start Session")
                     .font(.title3.weight(.semibold))
                     .foregroundStyle(.primary)
-                Text("Settle in for a deep work block")
+                Text("Log what you’re working on")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -58,14 +58,14 @@ private struct InactiveFocusCard: View {
     }
 }
 
-private struct ActiveFocusCard: View {
+private struct ActiveSessionCard: View {
     let elapsedText: String
     let stopAction: () -> Void
 
     var body: some View {
         VStack(spacing: 20) {
             VStack(spacing: 8) {
-                Text("Focusing")
+                Text("Session Running")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
                 Text(elapsedText)
@@ -75,7 +75,7 @@ private struct ActiveFocusCard: View {
             }
 
             Button(action: stopAction) {
-                Text("Stop")
+                Text("End Session")
                     .font(.headline)
                     .padding(.horizontal, 32)
                     .padding(.vertical, 12)
@@ -110,10 +110,10 @@ private struct ActiveFocusCard: View {
     }
 }
 
-//#Preview("Focus Timer") {
+//#Preview("Session Timer") {
 //    VStack(spacing: 24) {
-//        FocusTimerView(viewModel: .preview)
-//        ActiveFocusCard(elapsedText: "00:32:17", stopAction: {})
+//        SessionTimerView(viewModel: .preview, onStartSession: {})
+//        ActiveSessionCard(elapsedText: "00:32:17", stopAction: {})
 //    }
 //    .padding()
 //    .background(Color(.systemGroupedBackground))

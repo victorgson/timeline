@@ -95,7 +95,7 @@ private enum ObjectiveRingPalette {
 }
 
 //#Preview("Objectives Card") {
-//    ObjectiveCardView(objectives: Array(FocusTrackerViewModel.preview.objectives.prefix(4)))
+//    ObjectiveCardView(objectives: Array(SessionTrackerViewModel.preview.objectives.prefix(4)))
 //        .padding()
 //        .background(Color(.systemGroupedBackground))
 //}

@@ -1,7 +1,7 @@
 import Foundation
 
 @MainActor
-final class InMemoryFocusTrackerRepository: FocusTrackerRepository {
+final class InMemorySessionTrackerRepository: SessionTrackerRepository {
     private var objectivesStorage: [Objective]
     private var activitiesStorage: [Activity]
     private var targetsStorage: [UUID: Double]

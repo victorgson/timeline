@@ -3,7 +3,7 @@ import Observation
 
 @MainActor
 @Observable
-final class FocusTrackerViewModel {
+final class SessionTrackerViewModel {
     struct ActivityDraft {
         var startedAt: Date
         var duration: TimeInterval
@@ -12,7 +12,7 @@ final class FocusTrackerViewModel {
         var tagsText: String
     }
 
-    private let repository: FocusTrackerRepository
+    private let repository: SessionTrackerRepository
     private let haptics: HapticBox
 
     var objectives: [Objective]
@@ -21,7 +21,7 @@ final class FocusTrackerViewModel {
     private var sessionStartDate: Date?
     private var objectiveTargets: [UUID: Double]
 
-    init(repository: FocusTrackerRepository, haptics: HapticBox = DefaultHapticBox()) {
+    init(repository: SessionTrackerRepository, haptics: HapticBox = DefaultHapticBox()) {
         self.repository = repository
         self.haptics = haptics
         self.objectives = repository.loadObjectives()
@@ -37,13 +37,13 @@ final class FocusTrackerViewModel {
         sessionStartDate
     }
 
-    func startFocus(now: Date = .now) {
+    func startSession(now: Date = .now) {
         guard sessionStartDate == nil else { return }
         sessionStartDate = now
         haptics.triggerImpact(style: .medium)
     }
 
-    func stopFocus(now: Date = .now) {
+    func stopSession(now: Date = .now) {
         guard let start = sessionStartDate else { return }
         let duration = now.timeIntervalSince(start)
         sessionStartDate = nil
@@ -145,7 +145,7 @@ final class FocusTrackerViewModel {
     func label(for activity: Activity, calendar: Calendar = .current) -> String {
         guard let objectiveID = activity.linkedObjectiveID,
               let objective = objectives.first(where: { $0.id == objectiveID }) else {
-            return "Focus Session"
+            return "Session"
         }
         return objective.title
     }
@@ -214,8 +214,8 @@ final class FocusTrackerViewModel {
     }
 }
 
-extension FocusTrackerViewModel {
-    static var preview: FocusTrackerViewModel {
+extension SessionTrackerViewModel {
+    static var preview: SessionTrackerViewModel {
         let deepWork = Objective(title: "Deep Work", progress: 0.45, unit: "hours")
         let learning = Objective(title: "Learning", progress: 0.3, unit: "hours")
         let recovery = Objective(title: "Recovery", progress: 0.8, unit: "sessions")
@@ -232,7 +232,7 @@ extension FocusTrackerViewModel {
             Activity(date: yesterday.addingTimeInterval(-5_400), duration: 60 * 60, linkedObjectiveID: learning.id, note: "Watched design systems talk.", tags: ["learning"])
         ]
 
-        let repository = InMemoryFocusTrackerRepository(
+        let repository = InMemorySessionTrackerRepository(
             objectives: [deepWork, learning, recovery, movement, experimentation],
             activities: activities,
             objectiveTargets: [
@@ -244,6 +244,6 @@ extension FocusTrackerViewModel {
             ]
         )
 
-        return FocusTrackerViewModel(repository: repository)
+        return SessionTrackerViewModel(repository: repository)
     }
 }

@@ -181,7 +181,7 @@ private struct TagsView: View {
 }
 //
 //#Preview("Activity Feed") {
-//    let viewModel = FocusTrackerViewModel.preview
+//    let viewModel = SessionTrackerViewModel.preview
 //    let calendar = Calendar.current
 //    let grouped = Dictionary(grouping: viewModel.activities) { calendar.startOfDay(for: $0.date) }
 //    let sections = grouped.keys.sorted(by: >).compactMap { day -> ActivityFeedSection? in

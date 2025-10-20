@@ -1,12 +1,12 @@
 import SwiftUI
 
-struct FocusSessionDetailView: View {
+struct SessionDetailView: View {
     @Environment(\.dismiss) private var dismiss
-    @Bindable var viewModel: FocusTrackerViewModel
+    @Bindable var viewModel: SessionTrackerViewModel
     let namespace: Namespace.ID
     let onStop: () -> Void
 
-    init(viewModel: FocusTrackerViewModel, namespace: Namespace.ID, onStop: @escaping () -> Void) {
+    init(viewModel: SessionTrackerViewModel, namespace: Namespace.ID, onStop: @escaping () -> Void) {
         self.viewModel = viewModel
         self.namespace = namespace
         self.onStop = onStop
@@ -20,7 +20,7 @@ struct FocusSessionDetailView: View {
             VStack(spacing: 32) {
                 TimelineView(.periodic(from: viewModel.activeSessionStartDate ?? .now, by: 1)) { timeline in
                     VStack(spacing: 12) {
-                        Text("Focusing")
+                        Text("Session Running")
                             .font(.title3.weight(.semibold))
                             .foregroundStyle(.secondary)
                         Text(viewModel.elapsedTimeString(now: timeline.date))
@@ -33,11 +33,11 @@ struct FocusSessionDetailView: View {
                 }
 
                 Button {
-                    viewModel.stopFocus()
+                    viewModel.stopSession()
                     onStop()
                     dismiss()
                 } label: {
-                    Text("Stop")
+                    Text("End Session")
                         .font(.headline)
                         .padding(.horizontal, 32)
                         .padding(.vertical, 12)
@@ -53,7 +53,7 @@ struct FocusSessionDetailView: View {
             .padding(.vertical, 40)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
-        .matchedTransitionSource(id: FocusTrackerView.focusTimerTransitionID, in: namespace)
+        .matchedTransitionSource(id: SessionTrackerView.sessionTimerTransitionID, in: namespace)
         .onDisappear {
             if viewModel.isTimerRunning {
                 onStop()
@@ -70,17 +70,17 @@ struct FocusSessionDetailView: View {
     }
 }
 
-private struct FocusSessionDetailPreviewContainer: View {
+private struct SessionDetailPreviewContainer: View {
     @Namespace var namespace
-    @State var viewModel = FocusTrackerViewModel.preview
+    @State var viewModel = SessionTrackerViewModel.preview
 
     var body: some View {
         NavigationStack {
-            FocusSessionDetailView(viewModel: viewModel, namespace: namespace) {}
+            SessionDetailView(viewModel: viewModel, namespace: namespace) {}
         }
     }
 }
 
-#Preview("Focus Session Detail") {
-    FocusSessionDetailPreviewContainer()
+#Preview("Session Detail") {
+    SessionDetailPreviewContainer()
 }

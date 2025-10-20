@@ -1,16 +1,16 @@
 import SwiftUI
 import Observation
 
-struct FocusTrackerView: View {
-    @State private var viewModel: FocusTrackerViewModel
+struct SessionTrackerView: View {
+    @State private var viewModel: SessionTrackerViewModel
     private let calendar = Calendar.current
     @State private var isPresentingObjectiveSheet = false
     @State private var showFullScreenTimer = false
-    @Namespace private var focusTimerNamespace
+    @Namespace private var sessionTimerNamespace
 
-    static let focusTimerTransitionID = "focus-timer-card"
+    static let sessionTimerTransitionID = "session-timer-card"
 
-    init(viewModel: FocusTrackerViewModel) {
+    init(viewModel: SessionTrackerViewModel) {
         _viewModel = State(initialValue: viewModel)
     }
 
@@ -28,8 +28,8 @@ struct FocusTrackerView: View {
                 .listSectionSeparator(.hidden)
 
                 Section {
-                    FocusTimerView(viewModel: bindableViewModel) {
-                        bindableViewModel.startFocus()
+                    SessionTimerView(viewModel: bindableViewModel) {
+                        bindableViewModel.startSession()
                         showFullScreenTimer = true
                     }
                     .contentShape(Rectangle())
@@ -38,7 +38,7 @@ struct FocusTrackerView: View {
                             showFullScreenTimer = true
                         }
                     }
-                    .matchedTransitionSource(id: FocusTrackerView.focusTimerTransitionID, in: focusTimerNamespace)
+                    .matchedTransitionSource(id: SessionTrackerView.sessionTimerTransitionID, in: sessionTimerNamespace)
                     .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 24, trailing: 20))
                     .listRowBackground(Color.clear)
                 }
@@ -47,7 +47,7 @@ struct FocusTrackerView: View {
 
                 ActivityFeedView(
                     sections: activitySections(for: bindableViewModel),
-                    emptyStateMessage: "No focus sessions yet.",
+                    emptyStateMessage: "No sessions logged yet.",
                     titleProvider: { activity in
                         bindableViewModel.label(for: activity, calendar: calendar)
                     },
@@ -62,7 +62,7 @@ struct FocusTrackerView: View {
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
             .background(Color(.systemGroupedBackground))
-            .navigationTitle("Focus")
+            .navigationTitle("Sessions")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -74,14 +74,14 @@ struct FocusTrackerView: View {
                 }
             }
             .navigationDestination(isPresented: $showFullScreenTimer) {
-                FocusSessionDetailView(
+                SessionDetailView(
                     viewModel: bindableViewModel,
-                    namespace: focusTimerNamespace,
+                    namespace: sessionTimerNamespace,
                     onStop: {
                         showFullScreenTimer = false
                     }
                 )
-                .navigationTransition(.zoom(sourceID: FocusTrackerView.focusTimerTransitionID, in: focusTimerNamespace))
+                .navigationTransition(.zoom(sourceID: SessionTrackerView.sessionTimerTransitionID, in: sessionTimerNamespace))
                 .navigationBarBackButtonHidden(true)
                 .toolbar(.hidden, for: .navigationBar)
                 .toolbarBackground(.hidden, for: .navigationBar)
@@ -124,7 +124,7 @@ struct FocusTrackerView: View {
         }
     }
 
-    private func objectivesSection(viewModel: FocusTrackerViewModel) -> some View {
+    private func objectivesSection(viewModel: SessionTrackerViewModel) -> some View {
         let pages = objectivePages(for: viewModel)
 
         let cardHeight = pages.map { objectiveCardHeight(for: $0.count) }.max() ?? objectiveCardHeight(for: 0)
@@ -166,7 +166,7 @@ struct FocusTrackerView: View {
         return 320
     }
 
-    private func objectivePages(for viewModel: FocusTrackerViewModel) -> [[Objective]] {
+    private func objectivePages(for viewModel: SessionTrackerViewModel) -> [[Objective]] {
         let chunkSize = 4
         var chunks: [[Objective]] = []
         var current: [Objective] = []
@@ -185,7 +185,7 @@ struct FocusTrackerView: View {
         return chunks
     }
 
-    private func activitySections(for viewModel: FocusTrackerViewModel) -> [ActivityFeedSection] {
+    private func activitySections(for viewModel: SessionTrackerViewModel) -> [ActivityFeedSection] {
         guard !viewModel.activities.isEmpty else { return [] }
 
         let grouped = Dictionary(grouping: viewModel.activities) { activity -> Date in
@@ -214,7 +214,7 @@ struct FocusTrackerView: View {
 
 private struct ActivityLinkSheet: View {
     let objectives: [Objective]
-    @State var draft: FocusTrackerViewModel.ActivityDraft
+    @State var draft: SessionTrackerViewModel.ActivityDraft
     let onSelectObjective: (UUID?) -> Void
     let onChangeNote: (String) -> Void
     let onChangeTags: (String) -> Void
@@ -357,6 +357,6 @@ private struct AddObjectiveSheet: View {
     }
 }
 
-//#Preview("Focus Tracker") {
-//    FocusTrackerView(viewModel: .preview)
+//#Preview("Session Tracker") {
+//    SessionTrackerView(viewModel: .preview)
 //}

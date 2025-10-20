@@ -1,7 +1,7 @@
 import Foundation
 
 @MainActor
-protocol FocusTrackerRepository {
+protocol SessionTrackerRepository {
     func loadObjectives() -> [Objective]
     func loadActivities() -> [Activity]
     func loadObjectiveTargets() -> [UUID: Double]
