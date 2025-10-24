@@ -9,6 +9,8 @@ final class SessionTrackerViewModel {
         var startedAt: Date
         var duration: TimeInterval
         var selectedObjectiveID: UUID?
+        var selectedTimeAllocations: [UUID: TimeInterval]
+        var quantityValues: [UUID: Double]
         var note: String
         var tagsText: String
 
@@ -24,14 +26,12 @@ final class SessionTrackerViewModel {
     var activities: [Activity]
     var activityDraft: ActivityDraft?
     private var sessionStartDate: Date?
-    private var objectiveTargets: [UUID: Double]
 
     init(repository: SessionTrackerRepository, haptics: HapticBox = DefaultHapticBox()) {
         self.repository = repository
         self.haptics = haptics
         self.objectives = repository.loadObjectives()
         self.activities = repository.loadActivities()
-        self.objectiveTargets = repository.loadObjectiveTargets()
     }
 
     var isTimerRunning: Bool {
@@ -60,6 +60,8 @@ final class SessionTrackerViewModel {
             startedAt: start,
             duration: duration,
             selectedObjectiveID: nil,
+            selectedTimeAllocations: [:],
+            quantityValues: [:],
             note: "",
             tagsText: ""
         )
@@ -76,7 +78,7 @@ final class SessionTrackerViewModel {
         activities = repository.loadActivities()
 
         if let objectiveID = activity.linkedObjectiveID {
-            adjustProgress(for: objectiveID, duration: activity.duration, adding: false)
+            applyTimeAllocations(activity.keyResultAllocations, to: objectiveID, adding: false)
         }
 
         haptics.triggerNotification(.warning)
@@ -86,22 +88,17 @@ final class SessionTrackerViewModel {
         if let id = submission.id, let index = objectives.firstIndex(where: { $0.id == id }) {
             var updated = objectives[index]
             updated.title = submission.title
-            updated.unit = submission.unit
             updated.colorHex = submission.colorHex
             updated.keyResults = submission.keyResults
             objectives[index] = updated
             repository.upsertObjective(updated)
-            applyTargetSubmission(submission.target, for: id)
         } else {
-            let objective = repository.createObjective(
+            _ = repository.createObjective(
                 title: submission.title,
-                unit: submission.unit,
-                target: submission.target,
                 colorHex: submission.colorHex,
                 keyResults: submission.keyResults
             )
             objectives = repository.loadObjectives()
-            objectiveTargets = repository.loadObjectiveTargets()
         }
     }
 
@@ -117,30 +114,37 @@ final class SessionTrackerViewModel {
         }
 
         let note = draft.note.trimmingCharacters(in: .whitespacesAndNewlines)
+        let allocations = draft.selectedTimeAllocations.map { key, seconds in
+            KeyResultAllocation(keyResultID: key, seconds: seconds)
+        }
+
         let activity = Activity(
             id: draft.originalActivity?.id ?? UUID(),
             date: draft.startedAt,
             duration: draft.duration,
             linkedObjectiveID: draft.selectedObjectiveID,
             note: note.isEmpty ? nil : note,
-            tags: tags
+            tags: tags,
+            keyResultAllocations: allocations
         )
 
         if let original = draft.originalActivity {
             repository.updateActivity(activity)
 
             if let originalObjective = original.linkedObjectiveID {
-                adjustProgress(for: originalObjective, duration: original.duration, adding: false)
+                applyTimeAllocations(original.keyResultAllocations, to: originalObjective, adding: false)
             }
 
             if let newObjective = activity.linkedObjectiveID {
-                adjustProgress(for: newObjective, duration: activity.duration, adding: true)
+                applyTimeAllocations(activity.keyResultAllocations, to: newObjective, adding: true)
+                applyQuantityOverrides(draft.quantityValues, to: newObjective)
             }
         } else {
             repository.recordActivity(activity)
 
-            if let objectiveID = draft.selectedObjectiveID {
-                adjustProgress(for: objectiveID, duration: draft.duration, adding: true)
+            if let objectiveID = activity.linkedObjectiveID {
+                applyTimeAllocations(activity.keyResultAllocations, to: objectiveID, adding: true)
+                applyQuantityOverrides(draft.quantityValues, to: objectiveID)
             }
         }
 
@@ -152,7 +156,17 @@ final class SessionTrackerViewModel {
 
     func setDraftObjective(_ objectiveID: UUID?) {
         guard var draft = activityDraft else { return }
+        guard draft.selectedObjectiveID != objectiveID else { return }
+
         draft.selectedObjectiveID = objectiveID
+        draft.selectedTimeAllocations = [:]
+
+        if let objectiveID, let objective = objective(withID: objectiveID) {
+            draft.quantityValues = defaultQuantityValues(for: objective)
+        } else {
+            draft.quantityValues = [:]
+        }
+
         activityDraft = draft
     }
 
@@ -168,12 +182,56 @@ final class SessionTrackerViewModel {
         activityDraft = draft
     }
 
+    func toggleDraftTimeKeyResult(_ keyResultID: UUID, isSelected: Bool) {
+        guard var draft = activityDraft else { return }
+        if isSelected {
+            let existing = draft.selectedTimeAllocations[keyResultID]
+            draft.selectedTimeAllocations[keyResultID] = existing ?? draft.duration
+        } else {
+            draft.selectedTimeAllocations.removeValue(forKey: keyResultID)
+        }
+        activityDraft = draft
+        haptics.triggerImpact(style: .light)
+    }
+
+    func setDraftQuantityValue(_ value: Double, for keyResultID: UUID) {
+        guard var draft = activityDraft else { return }
+        let clamped = max(0, value)
+        let previous = draft.quantityValues[keyResultID]
+        draft.quantityValues[keyResultID] = clamped
+        activityDraft = draft
+
+        if previous != clamped {
+            haptics.triggerImpact(style: .light)
+        }
+    }
+
+    func quantityValue(for keyResultID: UUID) -> Double? {
+        activityDraft?.quantityValues[keyResultID]
+    }
+
+    func isTimeKeyResultSelected(_ keyResultID: UUID) -> Bool {
+        activityDraft?.selectedTimeAllocations[keyResultID] != nil
+    }
+
     func editActivity(_ activity: Activity) {
+        var allocations: [UUID: TimeInterval] = [:]
+        for allocation in activity.keyResultAllocations {
+            allocations[allocation.keyResultID] = allocation.seconds
+        }
+
+        var quantityValues: [UUID: Double] = [:]
+        if let objectiveID = activity.linkedObjectiveID, let objective = objective(withID: objectiveID) {
+            quantityValues = defaultQuantityValues(for: objective)
+        }
+
         activityDraft = ActivityDraft(
             originalActivity: activity,
             startedAt: activity.date,
             duration: activity.duration,
             selectedObjectiveID: activity.linkedObjectiveID,
+            selectedTimeAllocations: allocations,
+            quantityValues: quantityValues,
             note: activity.note ?? "",
             tagsText: activity.tags.joined(separator: ", ")
         )
@@ -229,52 +287,46 @@ final class SessionTrackerViewModel {
         min(max(objective.progress, 0), 1)
     }
 
-    func targetValue(for objectiveID: UUID) -> Double? {
-        objectiveTargets[objectiveID]
-    }
-
-    func setObjectiveTarget(_ value: Double, for objectiveID: UUID) {
-        objectiveTargets[objectiveID] = value
-        repository.setObjectiveTarget(value, for: objectiveID)
-    }
-
-    private func applyTargetSubmission(_ value: Double?, for objectiveID: UUID) {
-        if let value {
-            objectiveTargets[objectiveID] = value
-            repository.setObjectiveTarget(value, for: objectiveID)
-        } else {
-            objectiveTargets.removeValue(forKey: objectiveID)
-            repository.clearObjectiveTarget(for: objectiveID)
+    private func defaultQuantityValues(for objective: Objective) -> [UUID: Double] {
+        objective.keyResults.reduce(into: [UUID: Double]()) { partialResult, keyResult in
+            if let quantity = keyResult.quantityMetric {
+                partialResult[keyResult.id] = quantity.current
+            }
         }
     }
 
-    private func adjustProgress(for objectiveID: UUID, duration: TimeInterval, adding: Bool) {
-        guard let index = objectives.firstIndex(where: { $0.id == objectiveID }) else { return }
-
-        let target = objectiveTargets[objectiveID] ?? defaultTarget(for: objectives[index])
-        guard target > 0 else { return }
-
-        let delta = duration / target
-        if adding {
-            objectives[index].progress = min(1, objectives[index].progress + delta)
-        } else {
-            objectives[index].progress = max(0, objectives[index].progress - delta)
+    private func applyQuantityOverrides(_ overrides: [UUID: Double], to objectiveID: UUID) {
+        mutateObjective(withID: objectiveID) { objective in
+            for (keyResultID, value) in overrides {
+                guard let index = objective.keyResults.firstIndex(where: { $0.id == keyResultID }),
+                      var quantity = objective.keyResults[index].quantityMetric else { continue }
+                quantity.current = max(0, value)
+                objective.keyResults[index].quantityMetric = quantity
+            }
         }
-        repository.upsertObjective(objectives[index])
     }
 
-    private func defaultTarget(for objective: Objective) -> TimeInterval {
-        let lowered = objective.unit.lowercased()
-        if lowered.contains("hour") {
-            return 3_600.0 * 3 // default 3-hour target
+    private func applyTimeAllocations(_ allocations: [KeyResultAllocation], to objectiveID: UUID, adding: Bool) {
+        guard !allocations.isEmpty else { return }
+        mutateObjective(withID: objectiveID) { objective in
+            for allocation in allocations {
+                guard let index = objective.keyResults.firstIndex(where: { $0.id == allocation.keyResultID }),
+                      var timeMetric = objective.keyResults[index].timeMetric else { continue }
+
+                let delta = timeMetric.unit.value(from: allocation.seconds)
+                let adjusted = timeMetric.logged + (adding ? delta : -delta)
+                timeMetric.logged = max(0, adjusted)
+                objective.keyResults[index].timeMetric = timeMetric
+            }
         }
-        if lowered.contains("session") {
-            return 3.0 // count of sessions
-        }
-        if lowered.contains("minute") {
-            return 3_600.0 // degrade to hour target
-        }
-        return 1.0
+    }
+
+    private func mutateObjective(withID id: UUID, mutation: (inout Objective) -> Void) {
+        guard let index = objectives.firstIndex(where: { $0.id == id }) else { return }
+        var objective = objectives[index]
+        mutation(&objective)
+        objectives[index] = objective
+        repository.upsertObjective(objective)
     }
 }
 
@@ -282,70 +334,70 @@ extension SessionTrackerViewModel {
     static var preview: SessionTrackerViewModel {
         let deepWork = Objective(
             title: "Deep Work",
-            progress: 0.45,
-            unit: "hours",
             colorHex: "#6366F1",
             keyResults: [
-                KeyResult(title: "Ship three features", targetDescription: "3 features", currentValue: "1 shipped")
+                KeyResult(
+                    title: "Log 12 hours of focus",
+                    timeMetric: .init(unit: .hours, target: 12, logged: 5.5)
+                ),
+                KeyResult(
+                    title: "Ship three features",
+                    quantityMetric: .init(unit: "features", target: 3, current: 1)
+                )
             ]
         )
-        let learning = Objective(
-            title: "Learning",
-            progress: 0.3,
-            unit: "hours",
-            colorHex: "#22C55E",
-            keyResults: [
-                KeyResult(title: "Finish design course", targetDescription: "12 lessons", currentValue: "5 complete")
-            ]
-        )
+
         let recovery = Objective(
             title: "Recovery",
-            progress: 0.8,
-            unit: "sessions",
-            colorHex: "#F59E0B",
+            colorHex: "#22C55E",
             keyResults: [
-                KeyResult(title: "Sleep 56 hours", targetDescription: "56h per week", currentValue: "44h logged")
+                KeyResult(
+                    title: "Sleep 56 hours",
+                    timeMetric: .init(unit: .hours, target: 56, logged: 32)
+                ),
+                KeyResult(
+                    title: "Stretch sessions",
+                    quantityMetric: .init(unit: "sessions", target: 14, current: 6)
+                )
             ]
         )
+
         let movement = Objective(
             title: "Movement",
-            progress: 0.6,
-            unit: "hours",
-            colorHex: "#14B8A6",
+            colorHex: "#F59E0B",
             keyResults: [
-                KeyResult(title: "Run 20km", targetDescription: "20km", currentValue: "8km")
+                KeyResult(
+                    title: "Run 20km",
+                    quantityMetric: .init(unit: "km", target: 20, current: 8)
+                )
             ]
         )
-        let experimentation = Objective(
-            title: "Build",
-            progress: 0.15,
-            unit: "sessions",
-            colorHex: "#EC4899",
-            keyResults: [
-                KeyResult(title: "Prototype new idea", targetDescription: "1 prototype")
-            ]
-        )
-
-        let calendar = Calendar.current
-        let today = Date()
-        let yesterday = calendar.date(byAdding: .day, value: -1, to: today) ?? today
 
         let activities: [Activity] = [
-            Activity(date: today.addingTimeInterval(-1_800), duration: 90 * 60, linkedObjectiveID: deepWork.id, note: "Flowed through the editor build.", tags: ["feature", "heads-down"]),
-            Activity(date: today.addingTimeInterval(-14_400), duration: 45 * 60, linkedObjectiveID: movement.id, note: "Mobility + strength block."),
-            Activity(date: yesterday.addingTimeInterval(-5_400), duration: 60 * 60, linkedObjectiveID: learning.id, note: "Watched design systems talk.", tags: ["learning"])
+            Activity(
+                date: Date().addingTimeInterval(-1_800),
+                duration: 90 * 60,
+                linkedObjectiveID: deepWork.id,
+                note: "Flowed through the editor build.",
+                tags: ["feature", "heads-down"],
+                keyResultAllocations: [
+                    KeyResultAllocation(keyResultID: deepWork.keyResults[0].id, seconds: 90 * 60)
+                ]
+            ),
+            Activity(
+                date: Date().addingTimeInterval(-14_400),
+                duration: 45 * 60,
+                linkedObjectiveID: recovery.id,
+                note: "Mobility + strength block.",
+                keyResultAllocations: [
+                    KeyResultAllocation(keyResultID: recovery.keyResults[0].id, seconds: 45 * 60)
+                ]
+            )
         ]
 
         let repository = InMemorySessionTrackerRepository(
-            objectives: [deepWork, learning, recovery, movement, experimentation],
-            activities: activities,
-            objectiveTargets: [
-                deepWork.id: 3_600.0 * 4,
-                learning.id: 3_600.0 * 2,
-                recovery.id: 3.0,
-                movement.id: 3_600.0 * 5,
-                experimentation.id: 3.0
-            ]
+            objectives: [deepWork, recovery, movement],
+            activities: activities
         )
 
         return SessionTrackerViewModel(repository: repository)

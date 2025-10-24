@@ -24,16 +24,6 @@ struct AddObjectiveSheet: View {
                 Section("Objective") {
                     TextField("Title", text: $bindableViewModel.title)
                         .textInputAutocapitalization(.words)
-                    TextField("Unit", text: $bindableViewModel.unit)
-                        .textInputAutocapitalization(.never)
-                }
-
-                Section("Target") {
-                    TextField("Target amount", text: $bindableViewModel.targetText)
-                        .keyboardType(.decimalPad)
-                    Text("Use the same unit as above (e.g. hours, sessions)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
                 }
 
                 Section("Appearance") {
@@ -54,10 +44,36 @@ struct AddObjectiveSheet: View {
                 Section("Key Results") {
                     ForEach($bindableViewModel.keyResults) { $keyResult in
                         VStack(alignment: .leading, spacing: 8) {
-                            TextField("Key result description", text: $keyResult.title, axis: .vertical)
+                            TextField("Key result title", text: $keyResult.title, axis: .vertical)
                                 .lineLimit(2, reservesSpace: true)
-                            TextField("Target (optional)", text: $keyResult.targetDescription)
-                            TextField("Current value (optional)", text: $keyResult.currentValue)
+
+                            Toggle("Track time", isOn: $keyResult.includeTime.animation())
+                                .toggleStyle(.switch)
+                            if keyResult.includeTime {
+                                Picker("Unit", selection: $keyResult.timeUnit) {
+                                    ForEach(KeyResult.TimeMetric.Unit.allCases, id: \.self) { unit in
+                                        Text(unit.displayName).tag(unit)
+                                    }
+                                }
+                                TextField("Target", text: $keyResult.timeTargetText)
+                                    .keyboardType(.decimalPad)
+                                TextField("Logged so far", text: $keyResult.timeCurrentText)
+                                    .keyboardType(.decimalPad)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Toggle("Track quantity", isOn: $keyResult.includeQuantity.animation())
+                                .toggleStyle(.switch)
+                                .padding(.top, 4)
+                            if keyResult.includeQuantity {
+                                TextField("Unit", text: $keyResult.quantityUnit)
+                                    .textInputAutocapitalization(.never)
+                                TextField("Target", text: $keyResult.quantityTargetText)
+                                    .keyboardType(.decimalPad)
+                                TextField("Current value", text: $keyResult.quantityCurrentText)
+                                    .keyboardType(.decimalPad)
+                                    .foregroundStyle(.secondary)
+                            }
 
                             if viewModel.keyResults.count > 1 {
                                 Button(role: .destructive) {

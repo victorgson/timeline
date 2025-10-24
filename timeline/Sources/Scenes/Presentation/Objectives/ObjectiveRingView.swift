@@ -33,7 +33,7 @@ struct ObjectiveRingView: View {
                         .font(.system(size: 15, weight: .semibold, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(.white)
-                    Text(objective.unit)
+                    Text("Complete")
                         .font(.caption2)
                         .foregroundStyle(Color.white.opacity(0.7))
                 }

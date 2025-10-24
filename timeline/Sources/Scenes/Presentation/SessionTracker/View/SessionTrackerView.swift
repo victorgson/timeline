@@ -98,7 +98,16 @@ struct SessionTrackerView: View {
                 ActivityLinkSheet(
                     objectives: bindableViewModel.objectives,
                     draft: draft,
-                    onSelectObjective: { bindableViewModel.setDraftObjective($0) },
+                    onSelectObjective: { objectiveID in
+                        bindableViewModel.setDraftObjective(objectiveID)
+                        return bindableViewModel.activityDraft?.quantityValues ?? [:]
+                    },
+                    onToggleTimeKeyResult: { keyResultID, isSelected in
+                        bindableViewModel.toggleDraftTimeKeyResult(keyResultID, isSelected: isSelected)
+                    },
+                    onSetQuantity: { keyResultID, value in
+                        bindableViewModel.setDraftQuantityValue(value, for: keyResultID)
+                    },
                     onChangeNote: { bindableViewModel.setDraftNote($0) },
                     onChangeTags: { bindableViewModel.setDraftTags($0) },
                     onSave: { bindableViewModel.saveDraft() },
@@ -147,7 +156,6 @@ struct SessionTrackerView: View {
                     onSelectObjective: { objective in
                         objectiveSheetViewModel = AddObjectiveSheetViewModel(
                             mode: .edit(objective),
-                            initialTarget: viewModel.targetValue(for: objective.id),
                             defaultColor: ObjectiveColorProvider.color(for: objective)
                         )
                         isPresentingObjectiveSheet = true
