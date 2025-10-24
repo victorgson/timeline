@@ -5,15 +5,33 @@ import SwiftUI
 @Observable
 final class AddObjectiveSheetViewModel {
     struct KeyResultForm: Identifiable, Hashable {
+        enum MetricType: String, CaseIterable, Identifiable {
+            case time
+            case quantity
+            case none
+
+            var id: String { rawValue }
+
+            var displayName: String {
+                switch self {
+                case .time:
+                    return "Time"
+                case .quantity:
+                    return "Quantity"
+                case .none:
+                    return "None"
+                }
+            }
+        }
+
         let id: UUID
         var title: String
+        var metricType: MetricType
 
-        var includeTime: Bool
         var timeUnit: KeyResult.TimeMetric.Unit
         var timeTargetText: String
         var timeCurrentText: String
 
-        var includeQuantity: Bool
         var quantityUnit: String
         var quantityTargetText: String
         var quantityCurrentText: String
@@ -21,22 +39,20 @@ final class AddObjectiveSheetViewModel {
         init(
             id: UUID = UUID(),
             title: String = "",
-            includeTime: Bool = false,
+            metricType: MetricType = .quantity,
             timeUnit: KeyResult.TimeMetric.Unit = .hours,
             timeTargetText: String = "",
             timeCurrentText: String = "",
-            includeQuantity: Bool = false,
             quantityUnit: String = "",
             quantityTargetText: String = "",
             quantityCurrentText: String = ""
         ) {
             self.id = id
             self.title = title
-            self.includeTime = includeTime
+            self.metricType = metricType
             self.timeUnit = timeUnit
             self.timeTargetText = timeTargetText
             self.timeCurrentText = timeCurrentText
-            self.includeQuantity = includeQuantity
             self.quantityUnit = quantityUnit
             self.quantityTargetText = quantityTargetText
             self.quantityCurrentText = quantityCurrentText
@@ -75,42 +91,50 @@ final class AddObjectiveSheetViewModel {
         var isValid: Bool {
             guard !trimmedTitle.isEmpty else { return false }
 
-            var hasMetric = false
-
-            if includeTime {
+            switch metricType {
+            case .time:
                 guard let _ = parsedTimeTarget else { return false }
-                hasMetric = true
-            }
-
-            if includeQuantity {
+                return true
+            case .quantity:
                 guard !trimmedQuantityUnit.isEmpty, let _ = parsedQuantityTarget else { return false }
-                hasMetric = true
+                return true
+            case .none:
+                return true
             }
-
-            return hasMetric
         }
 
         func makeKeyResult() -> KeyResult? {
             guard isValid else { return nil }
 
-            var timeMetric: KeyResult.TimeMetric?
-            if includeTime, let target = parsedTimeTarget {
+            switch metricType {
+            case .time:
+                guard let target = parsedTimeTarget else { return nil }
                 let current = max(0, parsedTimeCurrent)
-                timeMetric = KeyResult.TimeMetric(unit: timeUnit, target: target, logged: current)
-            }
-
-            var quantityMetric: KeyResult.QuantityMetric?
-            if includeQuantity, let target = parsedQuantityTarget {
+                let timeMetric = KeyResult.TimeMetric(unit: timeUnit, target: target, logged: current)
+                return KeyResult(
+                    id: id,
+                    title: trimmedTitle,
+                    timeMetric: timeMetric,
+                    quantityMetric: nil
+                )
+            case .quantity:
+                guard let target = parsedQuantityTarget else { return nil }
                 let current = max(0, parsedQuantityCurrent)
-                quantityMetric = KeyResult.QuantityMetric(unit: trimmedQuantityUnit, target: target, current: current)
+                let quantityMetric = KeyResult.QuantityMetric(unit: trimmedQuantityUnit, target: target, current: current)
+                return KeyResult(
+                    id: id,
+                    title: trimmedTitle,
+                    timeMetric: nil,
+                    quantityMetric: quantityMetric
+                )
+            case .none:
+                return KeyResult(
+                    id: id,
+                    title: trimmedTitle,
+                    timeMetric: nil,
+                    quantityMetric: nil
+                )
             }
-
-            return KeyResult(
-                id: id,
-                title: trimmedTitle,
-                timeMetric: timeMetric,
-                quantityMetric: quantityMetric
-            )
         }
     }
 
@@ -135,26 +159,38 @@ final class AddObjectiveSheetViewModel {
         case .create:
             self.title = ""
             self.color = defaultColor
-            self.keyResults = [KeyResultForm(includeQuantity: true)]
+            self.keyResults = [KeyResultForm(metricType: .quantity)]
         case .edit(let objective):
             self.title = objective.title
             self.color = Color(hex: objective.colorHex ?? "") ?? defaultColor
             self.keyResults = objective.keyResults.map { keyResult in
-                KeyResultForm(
+                let metricType: KeyResultForm.MetricType
+                if keyResult.timeMetric != nil, keyResult.quantityMetric == nil {
+                    metricType = .time
+                } else if keyResult.quantityMetric != nil, keyResult.timeMetric == nil {
+                    metricType = .quantity
+                } else if keyResult.timeMetric != nil {
+                    metricType = .time
+                } else if keyResult.quantityMetric != nil {
+                    metricType = .quantity
+                } else {
+                    metricType = .none
+                }
+
+                return KeyResultForm(
                     id: keyResult.id,
                     title: keyResult.title,
-                    includeTime: keyResult.timeMetric != nil,
+                    metricType: metricType,
                     timeUnit: keyResult.timeMetric?.unit ?? .hours,
                     timeTargetText: Self.formatDouble(keyResult.timeMetric?.target),
                     timeCurrentText: Self.formatDouble(keyResult.timeMetric?.logged),
-                    includeQuantity: keyResult.quantityMetric != nil,
                     quantityUnit: keyResult.quantityMetric?.unit ?? "",
                     quantityTargetText: Self.formatDouble(keyResult.quantityMetric?.target),
                     quantityCurrentText: Self.formatDouble(keyResult.quantityMetric?.current)
                 )
             }
             if keyResults.isEmpty {
-                keyResults = [KeyResultForm(includeQuantity: true)]
+                keyResults = [KeyResultForm(metricType: .quantity)]
             }
         }
     }
@@ -190,14 +226,31 @@ final class AddObjectiveSheetViewModel {
     }
 
     func addKeyResult() {
-        keyResults.append(KeyResultForm(includeQuantity: true))
+        keyResults.append(KeyResultForm(metricType: .quantity))
     }
 
     func removeKeyResult(id: UUID) {
         keyResults.removeAll { $0.id == id }
         if keyResults.isEmpty {
-            keyResults.append(KeyResultForm(includeQuantity: true))
+            keyResults.append(KeyResultForm(metricType: .quantity))
         }
+    }
+
+    func updateKeyResult(_ keyResult: KeyResultForm) {
+        guard let index = keyResults.firstIndex(where: { $0.id == keyResult.id }) else { return }
+        keyResults[index] = keyResult
+    }
+
+    func sectionTitle(forKeyResult id: UUID) -> String {
+        guard let index = keyResults.firstIndex(where: { $0.id == id }) else {
+            return "Key Result"
+        }
+
+        let baseTitle = "Key Result \(index + 1)"
+        let customTitle = keyResults[index].trimmedTitle
+
+        guard !customTitle.isEmpty else { return baseTitle }
+        return "\(baseTitle): \(customTitle)"
     }
 
     func makeSubmission() -> ObjectiveFormSubmission {
