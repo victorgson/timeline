@@ -9,7 +9,7 @@ struct InactiveSessionCard: View {
                 Circle()
                     .fill(Color.accentColor.opacity(0.12))
                     .frame(width: 48, height: 48)
-                Image(systemName: "moon.zzz.fill")
+                Image(systemName: "target")
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(.tint)
             }
