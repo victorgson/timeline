@@ -159,11 +159,12 @@ final class SessionTrackerViewModel {
         guard draft.selectedObjectiveID != objectiveID else { return }
 
         draft.selectedObjectiveID = objectiveID
-        draft.selectedTimeAllocations = [:]
 
         if let objectiveID, let objective = objective(withID: objectiveID) {
+            draft.selectedTimeAllocations = defaultTimeAllocations(for: objective, duration: draft.duration)
             draft.quantityValues = defaultQuantityValues(for: objective)
         } else {
+            draft.selectedTimeAllocations = [:]
             draft.quantityValues = [:]
         }
 
@@ -180,18 +181,6 @@ final class SessionTrackerViewModel {
         guard var draft = activityDraft else { return }
         draft.tagsText = tags
         activityDraft = draft
-    }
-
-    func toggleDraftTimeKeyResult(_ keyResultID: UUID, isSelected: Bool) {
-        guard var draft = activityDraft else { return }
-        if isSelected {
-            let existing = draft.selectedTimeAllocations[keyResultID]
-            draft.selectedTimeAllocations[keyResultID] = existing ?? draft.duration
-        } else {
-            draft.selectedTimeAllocations.removeValue(forKey: keyResultID)
-        }
-        activityDraft = draft
-        haptics.triggerImpact(style: .light)
     }
 
     func setDraftQuantityValue(_ value: Double, for keyResultID: UUID) {
@@ -285,6 +274,13 @@ final class SessionTrackerViewModel {
 
     func progressValue(for objective: Objective) -> Double {
         min(max(objective.progress, 0), 1)
+    }
+
+    private func defaultTimeAllocations(for objective: Objective, duration: TimeInterval) -> [UUID: TimeInterval] {
+        objective.keyResults.reduce(into: [UUID: TimeInterval]()) { partialResult, keyResult in
+            guard keyResult.timeMetric != nil else { return }
+            partialResult[keyResult.id] = duration
+        }
     }
 
     private func defaultQuantityValues(for objective: Objective) -> [UUID: Double] {

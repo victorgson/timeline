@@ -9,11 +9,11 @@ struct ActiveSessionCard: View {
             VStack(spacing: 8) {
                 Text("Session Running")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.white.opacity(0.8))
                 Text(elapsedText)
                     .font(.system(size: 36, weight: .bold, design: .rounded))
                     .monospacedDigit()
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(.white)
             }
 
             Button(action: stopAction) {
@@ -23,10 +23,9 @@ struct ActiveSessionCard: View {
                     .padding(.vertical, 12)
                     .background(
                         Capsule()
-                            .fill(Color.white.opacity(0.9))
+                            .strokeBorder(Color.white.opacity(0.9), lineWidth: 1.5)
                     )
-                    .foregroundStyle(.black)
-                    .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 4)
+                    .foregroundStyle(.white)
             }
             .buttonStyle(.plain)
         }

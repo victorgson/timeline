@@ -3,12 +3,10 @@ import SwiftUI
 struct SessionDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var viewModel: SessionTrackerViewModel
-    let namespace: Namespace.ID
     let onStop: () -> Void
 
-    init(viewModel: SessionTrackerViewModel, namespace: Namespace.ID, onStop: @escaping () -> Void) {
+    init(viewModel: SessionTrackerViewModel, onStop: @escaping () -> Void) {
         self.viewModel = viewModel
-        self.namespace = namespace
         self.onStop = onStop
     }
 
@@ -22,20 +20,23 @@ struct SessionDetailView: View {
                     VStack(spacing: 12) {
                         Text("Session Running")
                             .font(.title3.weight(.semibold))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.white.opacity(0.8))
                         Text(viewModel.elapsedTimeString(now: timeline.date))
                             .font(.system(size: 64, weight: .bold, design: .rounded))
                             .monospacedDigit()
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(.white)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 60)
                 }
 
                 Button {
-                    viewModel.stopSession()
+                    let stopTime = Date()
                     onStop()
                     dismiss()
+                    DispatchQueue.main.async {
+                        viewModel.stopSession(now: stopTime)
+                    }
                 } label: {
                     Text("End Session")
                         .font(.headline)
@@ -43,9 +44,9 @@ struct SessionDetailView: View {
                         .padding(.vertical, 12)
                         .background(
                             Capsule()
-                                .fill(Color.white.opacity(0.95))
+                                .strokeBorder(Color.white.opacity(0.9), lineWidth: 1.5)
                         )
-                        .foregroundStyle(Color.black)
+                        .foregroundStyle(.white)
                 }
                 .buttonStyle(.plain)
             }
@@ -53,7 +54,7 @@ struct SessionDetailView: View {
             .padding(.vertical, 40)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
-        .matchedTransitionSource(id: SessionTrackerView.sessionTimerTransitionID, in: namespace)
+        .ignoresSafeArea()
         .onDisappear {
             if viewModel.isTimerRunning {
                 onStop()

@@ -6,7 +6,7 @@ struct SessionDetailPreviewContainer: View {
 
     var body: some View {
         NavigationStack {
-            SessionDetailView(viewModel: viewModel, namespace: namespace) {}
+            SessionDetailView(viewModel: viewModel) {}
         }
     }
 }

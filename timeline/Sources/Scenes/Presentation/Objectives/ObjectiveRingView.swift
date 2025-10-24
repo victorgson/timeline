@@ -15,7 +15,7 @@ struct ObjectiveRingView: View {
             ZStack {
                 Circle()
                     .stroke(style: StrokeStyle(lineWidth: ringLineWidth, lineCap: .round))
-                    .foregroundStyle(Color.white.opacity(0.12))
+                    .foregroundStyle(Color.primary.opacity(0.12))
                 Circle()
                     .trim(from: 0, to: CGFloat(progress))
                     .stroke(
@@ -32,17 +32,17 @@ struct ObjectiveRingView: View {
                     Text(percentageText)
                         .font(.system(size: 15, weight: .semibold, design: .rounded))
                         .monospacedDigit()
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.primary)
                     Text("Complete")
                         .font(.caption2)
-                        .foregroundStyle(Color.white.opacity(0.7))
+                        .foregroundStyle(.secondary)
                 }
             }
             .frame(width: 88, height: 88)
 
             Text(objective.title)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.85)

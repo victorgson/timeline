@@ -7,10 +7,6 @@ struct SessionTrackerView: View {
     @State private var isPresentingObjectiveSheet = false
     @State private var objectiveSheetViewModel = AddObjectiveSheetViewModel()
     @State private var showFullScreenTimer = false
-    @Namespace private var sessionTimerNamespace
-    
-    static let sessionTimerTransitionID = "session-timer-card"
-    
     init(viewModel: SessionTrackerViewModel) {
         _viewModel = State(initialValue: viewModel)
     }
@@ -39,7 +35,6 @@ struct SessionTrackerView: View {
                             showFullScreenTimer = true
                         }
                     }
-                    .matchedTransitionSource(id: SessionTrackerView.sessionTimerTransitionID, in: sessionTimerNamespace)
                     .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 24, trailing: 20))
                     .listRowBackground(Color.clear)
                 }
@@ -74,14 +69,10 @@ struct SessionTrackerView: View {
             .navigationDestination(isPresented: $showFullScreenTimer) {
                 SessionDetailView(
                     viewModel: bindableViewModel,
-                    namespace: sessionTimerNamespace,
                     onStop: {
                         showFullScreenTimer = false
                     }
                 )
-                .navigationTransition(.zoom(sourceID: SessionTrackerView.sessionTimerTransitionID, in: sessionTimerNamespace))
-                .navigationBarBackButtonHidden(true)
-                .toolbar(.hidden, for: .navigationBar)
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .statusBarHidden(true)
             }
@@ -101,9 +92,6 @@ struct SessionTrackerView: View {
                     onSelectObjective: { objectiveID in
                         bindableViewModel.setDraftObjective(objectiveID)
                         return bindableViewModel.activityDraft?.quantityValues ?? [:]
-                    },
-                    onToggleTimeKeyResult: { keyResultID, isSelected in
-                        bindableViewModel.toggleDraftTimeKeyResult(keyResultID, isSelected: isSelected)
                     },
                     onSetQuantity: { keyResultID, value in
                         bindableViewModel.setDraftQuantityValue(value, for: keyResultID)

@@ -23,8 +23,8 @@ struct AddObjectiveSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    CardContainer(title: "Objective") {
-                        LabeledTextField(
+                    SheetCardContainer(title: "Objective") {
+                        SheetLabeledTextField(
                             title: "Title",
                             placeholder: "Ship the quarterly roadmap",
                             text: $bindableViewModel.title,
@@ -33,11 +33,11 @@ struct AddObjectiveSheet: View {
                         )
                     }
 
-                    CardContainer(title: "Appearance") {
+                    SheetCardContainer(title: "Appearance") {
                         HStack(spacing: 16) {
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("Color")
-                                    .cardLabelStyle()
+                                    .sheetCardLabelStyle()
                                 Text("Choose a tint for this objective.")
                                     .font(.footnote)
                                     .foregroundStyle(.secondary)
@@ -114,68 +114,6 @@ struct AddObjectiveSheet: View {
     }
 }
 
-private struct CardContainer<Content: View>: View {
-    let title: String?
-    let content: Content
-
-    init(title: String? = nil, @ViewBuilder content: () -> Content) {
-        self.title = title
-        self.content = content()
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            if let title, !title.isEmpty {
-                Text(title)
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(.primary)
-            }
-            content
-        }
-        .padding(20)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color(uiColor: .secondarySystemGroupedBackground))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .stroke(Color(uiColor: .separator).opacity(0.2), lineWidth: 1)
-        )
-        .shadow(color: Color.black.opacity(0.05), radius: 12, x: 0, y: 6)
-    }
-}
-
-private struct LabeledTextField: View {
-    let title: String
-    let placeholder: String
-    @Binding var text: String
-    var axis: Axis = .horizontal
-    var keyboardType: UIKeyboardType = .default
-    var autocapitalization: TextInputAutocapitalization = .sentences
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(title)
-                .cardLabelStyle()
-            TextField(placeholder, text: $text, axis: axis)
-                .textFieldStyle(.plain)
-                .textInputAutocapitalization(autocapitalization)
-                .keyboardType(keyboardType)
-                .padding(.vertical, 12)
-                .padding(.horizontal, 14)
-                .background(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(Color(uiColor: .systemBackground))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .stroke(Color(uiColor: .separator).opacity(0.25), lineWidth: 1)
-                )
-        }
-    }
-}
-
 private struct KeyResultCard: View {
     let title: String
     @Binding var keyResult: AddObjectiveSheetViewModel.KeyResultForm
@@ -183,9 +121,9 @@ private struct KeyResultCard: View {
     let onRemove: () -> Void
 
     var body: some View {
-        CardContainer(title: title) {
+        SheetCardContainer(title: title) {
             VStack(alignment: .leading, spacing: 24) {
-                LabeledTextField(
+                SheetLabeledTextField(
                     title: "Title",
                     placeholder: "Describe the outcome",
                     text: $keyResult.title,
@@ -194,7 +132,7 @@ private struct KeyResultCard: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Metric Type")
-                        .cardLabelStyle()
+                        .sheetCardLabelStyle()
                     Picker("Metric Type", selection: $keyResult.metricType) {
                         ForEach(AddObjectiveSheetViewModel.KeyResultForm.MetricType.allCases) { type in
                             Text(type.displayName).tag(type)
@@ -209,7 +147,7 @@ private struct KeyResultCard: View {
                     case .time:
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Time Unit")
-                                .cardLabelStyle()
+                                .sheetCardLabelStyle()
                             Picker("Time Unit", selection: $keyResult.timeUnit) {
                                 ForEach(KeyResult.TimeMetric.Unit.allCases, id: \.self) { unit in
                                     Text(unit.displayName).tag(unit)
@@ -217,14 +155,14 @@ private struct KeyResultCard: View {
                             }
                             .pickerStyle(.segmented)
 
-                            LabeledTextField(
+                            SheetLabeledTextField(
                                 title: "Target",
                                 placeholder: "Goal in chosen unit",
                                 text: $keyResult.timeTargetText,
                                 keyboardType: .decimalPad
                             )
 
-                            LabeledTextField(
+                            SheetLabeledTextField(
                                 title: "Logged",
                                 placeholder: "Time completed so far",
                                 text: $keyResult.timeCurrentText,
@@ -233,21 +171,21 @@ private struct KeyResultCard: View {
                         }
                     case .quantity:
                         VStack(alignment: .leading, spacing: 12) {
-                            LabeledTextField(
+                            SheetLabeledTextField(
                                 title: "Unit",
                                 placeholder: "e.g. articles",
                                 text: $keyResult.quantityUnit,
                                 autocapitalization: .never
                             )
 
-                            LabeledTextField(
+                            SheetLabeledTextField(
                                 title: "Target",
                                 placeholder: "Goal in this unit",
                                 text: $keyResult.quantityTargetText,
                                 keyboardType: .decimalPad
                             )
 
-                            LabeledTextField(
+                            SheetLabeledTextField(
                                 title: "Current",
                                 placeholder: "Current amount",
                                 text: $keyResult.quantityCurrentText,
@@ -281,14 +219,5 @@ private struct KeyResultCard: View {
                 }
             }
         }
-    }
-}
-
-private extension View {
-    func cardLabelStyle() -> some View {
-        font(.caption)
-            .fontWeight(.semibold)
-            .foregroundStyle(.secondary)
-            .textCase(.uppercase)
     }
 }
