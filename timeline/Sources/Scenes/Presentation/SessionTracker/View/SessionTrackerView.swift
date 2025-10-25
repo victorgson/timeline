@@ -10,10 +10,10 @@ struct SessionTrackerView: View {
     init(viewModel: SessionTrackerViewModel) {
         _viewModel = State(initialValue: viewModel)
     }
-    
+
     var body: some View {
         @Bindable var bindableViewModel = viewModel
-        
+
         NavigationStack {
             List {
                 Section {
@@ -23,7 +23,7 @@ struct SessionTrackerView: View {
                 }
                 .textCase(nil)
                 .listSectionSeparator(.hidden)
-                
+
                 Section {
                     SessionTimerView(viewModel: bindableViewModel) {
                         bindableViewModel.startSession()
@@ -40,7 +40,7 @@ struct SessionTrackerView: View {
                 }
                 .textCase(nil)
                 .listSectionSeparator(.hidden)
-                
+
                 ActivityFeedView(
                     sections: activitySections(for: bindableViewModel),
                     emptyStateMessage: "No sessions logged yet.",
@@ -120,14 +120,13 @@ struct SessionTrackerView: View {
             }
         }
     }
-    
+
     private func objectivesSection(viewModel: SessionTrackerViewModel) -> some View {
         return VStack(alignment: .leading, spacing: 12) {
             Text("Objectives")
                 .font(.headline)
                 .foregroundStyle(.primary)
                 .padding(.horizontal, 20)
-
             if viewModel.objectives.isEmpty {
                 AddObjectiveCircleButton {
                     objectiveSheetViewModel = AddObjectiveSheetViewModel()
@@ -155,11 +154,11 @@ struct SessionTrackerView: View {
 
     private func activitySections(for viewModel: SessionTrackerViewModel) -> [ActivityFeedSection] {
         guard !viewModel.activities.isEmpty else { return [] }
-        
+
         let grouped = Dictionary(grouping: viewModel.activities) { activity -> Date in
             calendar.startOfDay(for: activity.date)
         }
-        
+
         let sortedDays = grouped.keys.sorted(by: >)
         return sortedDays.compactMap { day in
             guard let activities = grouped[day]?.sorted(by: { $0.date > $1.date }) else { return nil }
@@ -167,11 +166,11 @@ struct SessionTrackerView: View {
             return ActivityFeedSection(id: day, title: title, activities: activities)
         }
     }
-    
+
     private func title(for day: Date) -> String {
         if calendar.isDateInToday(day) { return "Today" }
         if calendar.isDateInYesterday(day) { return "Yesterday" }
-        
+
         let formatter = DateFormatter()
         formatter.calendar = calendar
         formatter.dateStyle = .medium
@@ -179,6 +178,3 @@ struct SessionTrackerView: View {
         return formatter.string(from: day)
     }
 }
-//#Preview("Session Tracker") {
-//    SessionTrackerView(viewModel: .preview)
-//}

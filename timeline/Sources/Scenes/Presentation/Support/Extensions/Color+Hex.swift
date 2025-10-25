@@ -9,7 +9,7 @@ extension Color {
         var value: UInt64 = 0
         guard Scanner(string: sanitized).scanHexInt64(&value) else { return nil }
 
-        let r, g, b, a: UInt64
+        let r, g, b, a: UInt64 // swiftlint:disable:this identifier_name
         switch sanitized.count {
         case 3: // RGB (12-bit)
             r = (value >> 8) * 17

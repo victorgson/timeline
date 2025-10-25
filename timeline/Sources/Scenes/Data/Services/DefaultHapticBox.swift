@@ -3,7 +3,7 @@ import UIKit
 final class DefaultHapticBox: HapticBox {
     private let impactGenerators: [Impact: UIImpactFeedbackGenerator]
     private let notificationGenerator: UINotificationFeedbackGenerator
-    
+
     init() {
         impactGenerators = [
             .light: UIImpactFeedbackGenerator(style: .light),
@@ -12,13 +12,13 @@ final class DefaultHapticBox: HapticBox {
         ]
         notificationGenerator = UINotificationFeedbackGenerator()
     }
-    
+
     func triggerImpact(style: DefaultHapticBox.Impact) {
         guard let generator = impactGenerators[style] else { return }
         generator.prepare()
         generator.impactOccurred()
     }
-    
+
     func triggerNotification(_ type: DefaultHapticBox.Notification) {
         notificationGenerator.prepare()
         switch type {

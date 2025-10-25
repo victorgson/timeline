@@ -29,7 +29,12 @@ final class CoreDataSessionTrackerRepository: SessionTrackerRepository {
     func loadActivities() async throws -> [Activity] {
         try await performOnViewContext { context in
             let request = ActivityEntity.fetchRequest()
-            request.sortDescriptors = [NSSortDescriptor(key: #keyPath(ActivityEntity.date), ascending: false)]
+            request.sortDescriptors = [
+                NSSortDescriptor(
+                    key: #keyPath(ActivityEntity.date),
+                    ascending: false
+                )
+            ]
             let entities = try context.fetch(request)
             return entities.compactMap(Self.makeActivity)
         }
@@ -37,7 +42,10 @@ final class CoreDataSessionTrackerRepository: SessionTrackerRepository {
 
     func upsertObjective(_ objective: Objective) async throws {
         try await performOnViewContext { context in
-            let entity = try Self.fetchObjectiveEntity(id: objective.id, in: context) ?? ObjectiveEntity(context: context)
+            let entity = try Self.fetchObjectiveEntity(
+                id: objective.id,
+                in: context
+            ) ?? ObjectiveEntity(context: context)
             entity.id = objective.id
             entity.title = objective.title
             entity.colorHex = objective.colorHex
@@ -267,10 +275,12 @@ private extension CoreDataSessionTrackerRepository {
         to objectiveEntity: ObjectiveEntity,
         in context: NSManagedObjectContext
     ) {
-        var existing = Dictionary(uniqueKeysWithValues: objectiveEntity.keyResultsSet.compactMap { entity -> (UUID, KeyResultEntity)? in
-            guard let identifier = entity.id else { return nil }
-            return (identifier, entity)
-        })
+        var existing = Dictionary(
+            uniqueKeysWithValues: objectiveEntity.keyResultsSet.compactMap { entity -> (UUID, KeyResultEntity)? in
+                guard let identifier = entity.id else { return nil }
+                return (identifier, entity)
+            }
+        )
 
         var updated: [KeyResultEntity] = []
 

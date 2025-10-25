@@ -125,35 +125,3 @@ struct ActivityFeedView: View {
             .listRowSeparator(.hidden)
     }
 }
-//
-//#Preview("Activity Feed") {
-//    let viewModel = SessionTrackerViewModel.preview
-//    let calendar = Calendar.current
-//    let grouped = Dictionary(grouping: viewModel.activities) { calendar.startOfDay(for: $0.date) }
-//    let sections = grouped.keys.sorted(by: >).compactMap { day -> ActivityFeedSection? in
-//        guard let activities = grouped[day]?.sorted(by: { $0.date > $1.date }) else { return nil }
-//        let title: String
-//        if calendar.isDateInToday(day) {
-//            title = "Today"
-//        } else if calendar.isDateInYesterday(day) {
-//            title = "Yesterday"
-//        } else {
-//            let formatter = DateFormatter()
-//            formatter.dateStyle = .medium
-//            formatter.timeStyle = .none
-//            title = formatter.string(from: day)
-//        }
-//        return ActivityFeedSection(id: day, title: title, activities: activities)
-//    }
-//
-//    return ActivityFeedView(
-//        sections: sections,
-//        emptyStateMessage: "No sessions yet"
-//    ) { activity in
-//        viewModel.label(for: activity)
-//    } durationFormatter: { duration in
-//        viewModel.formattedDuration(duration)
-//    }
-//    .padding()
-//    .background(Color(.systemGroupedBackground))
-//}

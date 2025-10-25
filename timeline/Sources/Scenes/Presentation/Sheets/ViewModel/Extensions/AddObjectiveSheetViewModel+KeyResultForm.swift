@@ -90,7 +90,11 @@ extension AddObjectiveSheetViewModel {
             case .quantity:
                 guard let target = parsedQuantityTarget else { return nil }
                 let current = max(0, parsedQuantityCurrent)
-                let quantityMetric = KeyResult.QuantityMetric(unit: trimmedQuantityUnit, target: target, current: current)
+                let quantityMetric = KeyResult.QuantityMetric(
+                    unit: trimmedQuantityUnit,
+                    target: target,
+                    current: current
+                )
                 return KeyResult(
                     id: id,
                     title: trimmedTitle,

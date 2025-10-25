@@ -22,11 +22,3 @@ struct ObjectiveCardView: View {
         .contentMargins(.horizontal, 20, for: .scrollContent)
     }
 }
-//#Preview("Objectives Card") {
-//    ObjectiveCardView(
-//        objectives: Array(SessionTrackerViewModel.preview.objectives.prefix(4)),
-//        onAddObjective: {}
-//    )
-//        .padding()
-//        .background(Color(.systemGroupedBackground))
-//}
