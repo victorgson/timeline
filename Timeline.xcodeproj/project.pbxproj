@@ -6,8 +6,44 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		8A7640C22F4F8B0100B12345 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		8A7640C32F4F8B0100B12345 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		8A7640C52F4F8B0100B12345 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		8A7640C72F4F8B0100B12345 /* (null) in Embed App Extensions */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6A85CA6F2EAD593F00F8C155 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37E8688F2EA1AAEC00B92107 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8A7640B62F4F8B0100B12345;
+			remoteInfo = SessionLiveActivityExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8A7640C62F4F8B0100B12345 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				8A7640C72F4F8B0100B12345 /* (null) in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		37E868972EA1AAEC00B92107 /* Timeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timeline.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A7640B72F4F8B0100B12345 /* SessionLiveActivityExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SessionLiveActivityExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A7640BF2F4F8B0100B12345 /* SessionLiveActivityExtensionBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLiveActivityExtensionBundle.swift; sourceTree = "<group>"; };
+		8A7640C02F4F8B0100B12345 /* SessionLiveActivityWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLiveActivityWidget.swift; sourceTree = "<group>"; };
+		8A7640C12F4F8B0100B12345 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8A7640C42F4F8B0100B12345 /* SessionLiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SessionLiveActivityAttributes.swift; path = timeline/Sources/Application/LiveActivities/SessionLiveActivityAttributes.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -39,6 +75,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8A7640BA2F4F8B0100B12345 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -46,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				37E868992EA1AAEC00B92107 /* timeline */,
+				8A7640B82F4F8B0100B12345 /* SessionLiveActivityExtension */,
 				37E868982EA1AAEC00B92107 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,8 +98,20 @@
 			isa = PBXGroup;
 			children = (
 				37E868972EA1AAEC00B92107 /* Timeline.app */,
+				8A7640B72F4F8B0100B12345 /* SessionLiveActivityExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8A7640B82F4F8B0100B12345 /* SessionLiveActivityExtension */ = {
+			isa = PBXGroup;
+			children = (
+				8A7640BF2F4F8B0100B12345 /* SessionLiveActivityExtensionBundle.swift */,
+				8A7640C02F4F8B0100B12345 /* SessionLiveActivityWidget.swift */,
+				8A7640C42F4F8B0100B12345 /* SessionLiveActivityAttributes.swift */,
+				8A7640C12F4F8B0100B12345 /* Info.plist */,
+			);
+			path = SessionLiveActivityExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -68,11 +124,13 @@
 				37E868932EA1AAEC00B92107 /* Sources */,
 				37E868942EA1AAEC00B92107 /* Frameworks */,
 				37E868952EA1AAEC00B92107 /* Resources */,
+				8A7640C62F4F8B0100B12345 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				6AD988E52EAD4B2800BF64E2 /* PBXTargetDependency */,
+				8A7640C82F4F8B0100B12345 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				37E868992EA1AAEC00B92107 /* timeline */,
@@ -83,6 +141,25 @@
 			productName = timeline;
 			productReference = 37E868972EA1AAEC00B92107 /* Timeline.app */;
 			productType = "com.apple.product-type.application";
+		};
+		8A7640B62F4F8B0100B12345 /* SessionLiveActivityExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A7640BE2F4F8B0100B12345 /* Build configuration list for PBXNativeTarget "SessionLiveActivityExtension" */;
+			buildPhases = (
+				8A7640B92F4F8B0100B12345 /* Sources */,
+				8A7640BA2F4F8B0100B12345 /* Frameworks */,
+				8A7640BB2F4F8B0100B12345 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SessionLiveActivityExtension;
+			packageProductDependencies = (
+			);
+			productName = SessionLiveActivityExtension;
+			productReference = 8A7640B72F4F8B0100B12345 /* SessionLiveActivityExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -95,6 +172,9 @@
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					37E868962EA1AAEC00B92107 = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					8A7640B62F4F8B0100B12345 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
@@ -117,12 +197,20 @@
 			projectRoot = "";
 			targets = (
 				37E868962EA1AAEC00B92107 /* Timeline */,
+				8A7640B62F4F8B0100B12345 /* SessionLiveActivityExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		37E868952EA1AAEC00B92107 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A7640BB2F4F8B0100B12345 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -139,12 +227,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8A7640B92F4F8B0100B12345 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A7640C22F4F8B0100B12345 /* (null) in Sources */,
+				8A7640C32F4F8B0100B12345 /* (null) in Sources */,
+				8A7640C52F4F8B0100B12345 /* (null) in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
 		6AD988E52EAD4B2800BF64E2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = 6AD988E42EAD4B2800BF64E2 /* SwiftLintBuildToolPlugin */;
+		};
+		8A7640C82F4F8B0100B12345 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8A7640B62F4F8B0100B12345 /* SessionLiveActivityExtension */;
+			targetProxy = 6A85CA6F2EAD593F00F8C155 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -276,9 +379,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Timeline/Timeline.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 96G8B7SJ53;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Timeline/Info.plist;
@@ -294,6 +397,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.timelineapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -310,9 +414,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Timeline/Timeline.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 96G8B7SJ53;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Timeline/Info.plist;
@@ -328,11 +432,61 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.timelineapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8A7640BC2F4F8B0100B12345 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SessionLiveActivityExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.timelineapp.SessionLiveActivityExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8A7640BD2F4F8B0100B12345 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SessionLiveActivityExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.timelineapp.SessionLiveActivityExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -355,6 +509,15 @@
 			buildConfigurations = (
 				37E868A32EA1AAEF00B92107 /* Debug */,
 				37E868A42EA1AAEF00B92107 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8A7640BE2F4F8B0100B12345 /* Build configuration list for PBXNativeTarget "SessionLiveActivityExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A7640BC2F4F8B0100B12345 /* Debug */,
+				8A7640BD2F4F8B0100B12345 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

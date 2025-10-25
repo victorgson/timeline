@@ -14,12 +14,18 @@ extension SessionTrackerViewModel {
         guard sessionStartDate == nil else { return }
         sessionStartDate = now
         haptics.triggerImpact(style: DefaultHapticBox.Impact.medium)
+        Task {
+            await liveActivityController.startLiveActivity(startDate: now)
+        }
     }
 
     func stopSession(now: Date = .now) {
         guard let start = sessionStartDate else { return }
         let duration = now.timeIntervalSince(start)
         sessionStartDate = nil
+        Task {
+            await liveActivityController.endLiveActivity()
+        }
 
         guard duration > 0 else { return }
 

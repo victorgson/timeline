@@ -82,7 +82,10 @@ extension SessionTrackerViewModel {
         }
         semaphore.wait()
 
-        return SessionTrackerViewModel(useCases: useCases)
+        return SessionTrackerViewModel(
+            useCases: useCases,
+            liveActivityController: NoopSessionLiveActivityController()
+        )
     }
 }
 
