@@ -1,11 +1,5 @@
 import SwiftUI
 
-struct ActivityFeedSection: Identifiable, Hashable {
-    let id: Date
-    var title: String
-    var activities: [Activity]
-}
-
 struct ActivityFeedView: View {
     typealias TitleProvider = (Activity) -> String
     typealias DurationFormatter = (TimeInterval) -> String

@@ -1,25 +1,11 @@
 import Foundation
+import Dispatch
 import Observation
 
 @MainActor
 @Observable
 final class SessionTrackerViewModel {
-    struct ActivityDraft {
-        var originalActivity: Activity?
-        var startedAt: Date
-        var duration: TimeInterval
-        var selectedObjectiveID: UUID?
-        var selectedTimeAllocations: [UUID: TimeInterval]
-        var quantityValues: [UUID: Double]
-        var note: String
-        var tagsText: String
-
-        var isEditing: Bool {
-            originalActivity != nil
-        }
-    }
-
-    private let repository: SessionTrackerRepository
+    private let useCases: SessionTrackerUseCases
     private let haptics: HapticBox
 
     var objectives: [Objective]
@@ -27,11 +13,31 @@ final class SessionTrackerViewModel {
     var activityDraft: ActivityDraft?
     private var sessionStartDate: Date?
 
-    init(repository: SessionTrackerRepository, haptics: HapticBox = DefaultHapticBox()) {
-        self.repository = repository
+    init(useCases: SessionTrackerUseCases, haptics: HapticBox = DefaultHapticBox()) {
+        self.useCases = useCases
         self.haptics = haptics
-        self.objectives = repository.loadObjectives()
-        self.activities = repository.loadActivities()
+        self.objectives = []
+        self.activities = []
+
+        Task {
+            await loadInitialData()
+        }
+    }
+
+    private func loadInitialData() async {
+        do {
+            objectives = try await useCases.loadObjectives.execute()
+        } catch {
+            assertionFailure("Failed to load objectives: \(error)")
+            objectives = []
+        }
+
+        do {
+            activities = try await useCases.loadActivities.execute()
+        } catch {
+            assertionFailure("Failed to load activities: \(error)")
+            activities = []
+        }
     }
 
     var isTimerRunning: Bool {
@@ -74,8 +80,16 @@ final class SessionTrackerViewModel {
     }
 
     func deleteActivity(_ activity: Activity) {
-        repository.removeActivity(withID: activity.id)
-        activities = repository.loadActivities()
+        Task { await deleteActivityAsync(activity) }
+    }
+
+    private func deleteActivityAsync(_ activity: Activity) async {
+        do {
+            try await useCases.removeActivity.execute(activity.id)
+            activities = try await useCases.loadActivities.execute()
+        } catch {
+            assertionFailure("Failed to delete activity: \(error)")
+        }
 
         if let objectiveID = activity.linkedObjectiveID {
             applyTimeAllocations(activity.keyResultAllocations, to: objectiveID, adding: false)
@@ -85,26 +99,41 @@ final class SessionTrackerViewModel {
     }
 
     func handleObjectiveSubmission(_ submission: ObjectiveFormSubmission) {
+        Task { await handleObjectiveSubmissionAsync(submission) }
+    }
+
+    private func handleObjectiveSubmissionAsync(_ submission: ObjectiveFormSubmission) async {
         if let id = submission.id, let index = objectives.firstIndex(where: { $0.id == id }) {
             var updated = objectives[index]
             updated.title = submission.title
             updated.colorHex = submission.colorHex
             updated.keyResults = submission.keyResults
             objectives[index] = updated
-            repository.upsertObjective(updated)
+            do {
+                try await useCases.upsertObjective.execute(updated)
+            } catch {
+                assertionFailure("Failed to update objective: \(error)")
+            }
         } else {
-            _ = repository.createObjective(
-                title: submission.title,
-                colorHex: submission.colorHex,
-                keyResults: submission.keyResults
-            )
-            objectives = repository.loadObjectives()
+            do {
+                _ = try await useCases.createObjective.execute(
+                    title: submission.title,
+                    colorHex: submission.colorHex,
+                    keyResults: submission.keyResults
+                )
+                objectives = try await useCases.loadObjectives.execute()
+            } catch {
+                assertionFailure("Failed to create objective: \(error)")
+            }
         }
     }
 
     func saveDraft(now: Date = .now) {
         guard let draft = activityDraft else { return }
+        Task { await saveDraftAsync(draft: draft) }
+    }
 
+    private func saveDraftAsync(draft: ActivityDraft) async {
         var tags: [String] = []
         if !draft.tagsText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             tags = draft.tagsText
@@ -129,7 +158,11 @@ final class SessionTrackerViewModel {
         )
 
         if let original = draft.originalActivity {
-            repository.updateActivity(activity)
+            do {
+                try await useCases.updateActivity.execute(activity)
+            } catch {
+                assertionFailure("Failed to update activity: \(error)")
+            }
 
             if let originalObjective = original.linkedObjectiveID {
                 applyTimeAllocations(original.keyResultAllocations, to: originalObjective, adding: false)
@@ -140,7 +173,11 @@ final class SessionTrackerViewModel {
                 applyQuantityOverrides(draft.quantityValues, to: newObjective)
             }
         } else {
-            repository.recordActivity(activity)
+            do {
+                try await useCases.recordActivity.execute(activity)
+            } catch {
+                assertionFailure("Failed to record activity: \(error)")
+            }
 
             if let objectiveID = activity.linkedObjectiveID {
                 applyTimeAllocations(activity.keyResultAllocations, to: objectiveID, adding: true)
@@ -148,7 +185,11 @@ final class SessionTrackerViewModel {
             }
         }
 
-        activities = repository.loadActivities()
+        do {
+            activities = try await useCases.loadActivities.execute()
+        } catch {
+            assertionFailure("Failed to refresh activities: \(error)")
+        }
 
         activityDraft = nil
         haptics.triggerNotification(.success)
@@ -322,7 +363,13 @@ final class SessionTrackerViewModel {
         var objective = objectives[index]
         mutation(&objective)
         objectives[index] = objective
-        repository.upsertObjective(objective)
+        Task {
+            do {
+                try await useCases.upsertObjective.execute(objective)
+            } catch {
+                assertionFailure("Failed to persist objective mutation: \(error)")
+            }
+        }
     }
 }
 
@@ -391,11 +438,35 @@ extension SessionTrackerViewModel {
             )
         ]
 
-        let repository = InMemorySessionTrackerRepository(
-            objectives: [deepWork, recovery, movement],
-            activities: activities
-        )
+        let persistence = PersistenceController(isPremiumEnabled: false, useInMemoryStore: true)
+        let repository = CoreDataSessionTrackerRepository(persistenceController: persistence)
+        let useCases = SessionTrackerUseCases.make(repository: repository)
 
-        return SessionTrackerViewModel(repository: repository)
+        let semaphore = DispatchSemaphore(value: 0)
+        Task {
+            await seedPreviewData(
+                useCases: useCases,
+                objectives: [deepWork, recovery, movement],
+                activities: activities
+            )
+            semaphore.signal()
+        }
+        semaphore.wait()
+
+        return SessionTrackerViewModel(useCases: useCases)
+    }
+
+    private static func seedPreviewData(
+        useCases: SessionTrackerUseCases,
+        objectives: [Objective],
+        activities: [Activity]
+    ) async {
+        for objective in objectives {
+            try? await useCases.upsertObjective.execute(objective)
+        }
+
+        for activity in activities {
+            try? await useCases.recordActivity.execute(activity)
+        }
     }
 }

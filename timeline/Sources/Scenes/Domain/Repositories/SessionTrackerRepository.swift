@@ -1,17 +1,21 @@
 import Foundation
 
-@MainActor
 protocol SessionTrackerRepository {
-    func loadObjectives() -> [Objective]
-    func loadActivities() -> [Activity]
-    func upsertObjective(_ objective: Objective)
-    func recordActivity(_ activity: Activity)
-    func updateActivity(_ activity: Activity)
-    func removeActivity(withID id: UUID)
+    func loadObjectives() async throws -> [Objective]
+    func loadActivities() async throws -> [Activity]
+    func upsertObjective(_ objective: Objective) async throws
+    func recordActivity(_ activity: Activity) async throws
+    func updateActivity(_ activity: Activity) async throws
+    func removeActivity(withID id: UUID) async throws
     @discardableResult
     func createObjective(
         title: String,
         colorHex: String?,
         keyResults: [KeyResult]
-    ) -> Objective
+    ) async throws -> Objective
+
+    func fetchSessions() async throws -> [Session]
+    func addSession(_ session: Session) async throws
+    func updateSession(_ session: Session) async throws
+    func deleteSession(id: UUID) async throws
 }
