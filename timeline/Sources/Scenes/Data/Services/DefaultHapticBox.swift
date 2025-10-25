@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 final class DefaultHapticBox: HapticBox {
     private let impactGenerators: [Impact: UIImpactFeedbackGenerator]
     private let notificationGenerator: UINotificationFeedbackGenerator

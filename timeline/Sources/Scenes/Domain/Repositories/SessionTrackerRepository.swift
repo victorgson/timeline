@@ -11,6 +11,7 @@ protocol SessionTrackerRepository {
     func createObjective(
         title: String,
         colorHex: String?,
+        endDate: Date?,
         keyResults: [KeyResult]
     ) async throws -> Objective
 

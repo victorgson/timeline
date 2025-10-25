@@ -49,6 +49,7 @@ final class CoreDataSessionTrackerRepository: SessionTrackerRepository {
             entity.id = objective.id
             entity.title = objective.title
             entity.colorHex = objective.colorHex
+            entity.endDate = objective.endDate
             Self.syncKeyResults(objective.keyResults, to: entity, in: context)
             try Self.saveIfNeeded(context: context)
         }
@@ -74,11 +75,13 @@ final class CoreDataSessionTrackerRepository: SessionTrackerRepository {
     func createObjective(
         title: String,
         colorHex: String?,
+        endDate: Date?,
         keyResults: [KeyResult]
     ) async throws -> Objective {
         let objective = Objective(
             title: title,
             colorHex: colorHex,
+            endDate: endDate,
             keyResults: keyResults
         )
         try await upsertObjective(objective)
@@ -180,6 +183,7 @@ private extension CoreDataSessionTrackerRepository {
             id: id,
             title: entity.title,
             colorHex: entity.colorHex,
+            endDate: entity.endDate,
             keyResults: keyResults
         )
     }

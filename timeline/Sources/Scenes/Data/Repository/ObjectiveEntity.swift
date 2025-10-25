@@ -5,6 +5,7 @@ final class ObjectiveEntity: NSManagedObject {
     @NSManaged var id: UUID?
     @NSManaged var title: String
     @NSManaged var colorHex: String?
+    @NSManaged var endDate: Date?
     @NSManaged var keyResults: NSSet?
     @NSManaged var activities: NSSet?
 }

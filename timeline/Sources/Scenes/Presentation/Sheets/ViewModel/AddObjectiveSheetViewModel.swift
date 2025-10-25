@@ -8,6 +8,8 @@ final class AddObjectiveSheetViewModel {
 
     var title: String
     var color: Color
+    var isEndDateEnabled: Bool
+    var endDate: Date
     var keyResults: [KeyResultForm]
 
     init(
@@ -20,10 +22,14 @@ final class AddObjectiveSheetViewModel {
         case .create:
             self.title = ""
             self.color = defaultColor
+            self.isEndDateEnabled = false
+            self.endDate = .now
             self.keyResults = [KeyResultForm(metricType: .quantity)]
         case .edit(let objective):
             self.title = objective.title
             self.color = Color(hex: objective.colorHex ?? "") ?? defaultColor
+            self.isEndDateEnabled = objective.endDate != nil
+            self.endDate = objective.endDate ?? .now
             self.keyResults = objective.keyResults.map { keyResult in
                 let metricType: KeyResultForm.MetricType
                 if keyResult.timeMetric != nil, keyResult.quantityMetric == nil {
@@ -86,6 +92,10 @@ final class AddObjectiveSheetViewModel {
         keyResults.compactMap { $0.makeKeyResult() }
     }
 
+    var preparedEndDate: Date? {
+        isEndDateEnabled ? endDate : nil
+    }
+
     func addKeyResult() {
         keyResults.append(KeyResultForm(metricType: .quantity))
     }
@@ -119,6 +129,7 @@ final class AddObjectiveSheetViewModel {
             id: objectiveID,
             title: trimmedTitle,
             colorHex: colorHex,
+            endDate: preparedEndDate,
             keyResults: preparedKeyResults
         )
     }

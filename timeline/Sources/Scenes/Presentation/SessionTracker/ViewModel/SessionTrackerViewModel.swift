@@ -15,11 +15,11 @@ final class SessionTrackerViewModel {
 
     init(
         useCases: SessionTrackerUseCases,
-        haptics: HapticBox = DefaultHapticBox(),
+        haptics: HapticBox? = nil,
         liveActivityController: (any SessionLiveActivityControlling)? = nil
     ) {
         self.useCases = useCases
-        self.haptics = haptics
+        self.haptics = haptics ?? DefaultHapticBox()
         self.liveActivityController = liveActivityController ?? SessionLiveActivityControllerFactory.make()
         self.objectives = []
         self.activities = []

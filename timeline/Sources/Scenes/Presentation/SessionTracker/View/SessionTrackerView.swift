@@ -114,7 +114,7 @@ struct SessionTrackerView: View {
                 objectiveSheetViewModel = AddObjectiveSheetViewModel()
             }
         }
-        .onChange(of: bindableViewModel.isTimerRunning) { running in
+        .onChange(of: bindableViewModel.isTimerRunning) { _, running in
             if !running {
                 showFullScreenTimer = false
             }

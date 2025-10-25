@@ -4,9 +4,11 @@ import Dispatch
 @MainActor
 extension SessionTrackerViewModel {
     static var preview: SessionTrackerViewModel {
+        let calendar = Calendar.current
         let deepWork = Objective(
             title: "Deep Work",
             colorHex: "#6366F1",
+            endDate: calendar.date(byAdding: .day, value: 21, to: .now),
             keyResults: [
                 KeyResult(
                     title: "Log 12 hours of focus",
@@ -22,6 +24,7 @@ extension SessionTrackerViewModel {
         let recovery = Objective(
             title: "Recovery",
             colorHex: "#22C55E",
+            endDate: calendar.date(byAdding: .day, value: 14, to: .now),
             keyResults: [
                 KeyResult(
                     title: "Sleep 56 hours",
@@ -37,6 +40,7 @@ extension SessionTrackerViewModel {
         let movement = Objective(
             title: "Movement",
             colorHex: "#F59E0B",
+            endDate: calendar.date(byAdding: .day, value: 7, to: .now),
             keyResults: [
                 KeyResult(
                     title: "Run 20km",

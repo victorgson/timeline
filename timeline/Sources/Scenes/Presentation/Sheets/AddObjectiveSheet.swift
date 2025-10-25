@@ -24,13 +24,37 @@ struct AddObjectiveSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     SheetCardContainer(title: "Objective") {
-                        SheetLabeledTextField(
-                            title: "Title",
-                            placeholder: "Ship the quarterly roadmap",
-                            text: $bindableViewModel.title,
-                            axis: .vertical,
-                            autocapitalization: .words
-                        )
+                        VStack(alignment: .leading, spacing: 20) {
+                            SheetLabeledTextField(
+                                title: "Title",
+                                placeholder: "Ship the quarterly roadmap",
+                                text: $bindableViewModel.title,
+                                axis: .vertical,
+                                autocapitalization: .words
+                            )
+
+                            VStack(alignment: .leading, spacing: 12) {
+                                Toggle(isOn: $bindableViewModel.isEndDateEnabled.animation()) {
+                                    Text("Set End Date")
+                                        .sheetCardLabelStyle()
+                                }
+                                .tint(.accentColor)
+
+                                Text("Track a deadline for this objective.")
+                                    .font(.footnote)
+                                    .foregroundStyle(.secondary)
+
+                                if bindableViewModel.isEndDateEnabled {
+                                    DatePicker(
+                                        "Objective End Date",
+                                        selection: $bindableViewModel.endDate,
+                                        displayedComponents: [.date]
+                                    )
+                                    .datePickerStyle(.compact)
+                                    .labelsHidden()
+                                }
+                            }
+                        }
                     }
 
                     SheetCardContainer(title: "Appearance") {

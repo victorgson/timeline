@@ -44,8 +44,8 @@ struct ObjectiveRingView: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.primary)
                 .multilineTextAlignment(.center)
-                .lineLimit(2)
-                .minimumScaleFactor(0.85)
+                .lineLimit(1)
+                .truncationMode(.tail)
         }
         .frame(width: 96)
         .contentShape(Rectangle())
@@ -65,4 +65,5 @@ struct ObjectiveRingView: View {
     private var color: Color {
         ObjectiveColorProvider.color(for: objective)
     }
+
 }

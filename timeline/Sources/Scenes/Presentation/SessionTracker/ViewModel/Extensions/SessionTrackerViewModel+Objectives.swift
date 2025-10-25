@@ -37,6 +37,7 @@ private extension SessionTrackerViewModel {
         var updated = objectives[index]
         updated.title = submission.title
         updated.colorHex = submission.colorHex
+        updated.endDate = submission.endDate
         updated.keyResults = submission.keyResults
         objectives[index] = updated
 
@@ -52,6 +53,7 @@ private extension SessionTrackerViewModel {
             _ = try await useCases.createObjective.execute(
                 title: submission.title,
                 colorHex: submission.colorHex,
+                endDate: submission.endDate,
                 keyResults: submission.keyResults
             )
             objectives = try await useCases.loadObjectives.execute()

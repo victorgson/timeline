@@ -1,5 +1,7 @@
 import SwiftUI
+
 @main
+@MainActor
 struct TimelineApp: App {
     @State private var sessionTrackerViewModel: SessionTrackerViewModel
 

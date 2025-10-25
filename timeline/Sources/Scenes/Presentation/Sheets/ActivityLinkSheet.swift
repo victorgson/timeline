@@ -128,14 +128,14 @@ struct ActivityLinkSheet: View {
             .navigationTitle("Link Session")
             .navigationBarTitleDisplayMode(.inline)
         }
-        .onChange(of: viewModel.selectedObjectiveID) { newValue in
+        .onChange(of: viewModel.selectedObjectiveID) { _, newValue in
             let quantityDefaults = onSelectObjective(newValue)
             viewModel.updateQuantityValues(quantityDefaults)
         }
-        .onChange(of: viewModel.note) { newValue in
+        .onChange(of: viewModel.note) { _, newValue in
             onChangeNote(newValue)
         }
-        .onChange(of: viewModel.tagsText) { newValue in
+        .onChange(of: viewModel.tagsText) { _, newValue in
             onChangeTags(newValue)
         }
     }

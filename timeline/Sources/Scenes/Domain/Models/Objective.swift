@@ -4,17 +4,20 @@ struct Objective: Identifiable, Hashable {
     let id: UUID
     var title: String
     var colorHex: String?
+    var endDate: Date?
     var keyResults: [KeyResult]
 
     init(
         id: UUID = UUID(),
         title: String,
         colorHex: String? = nil,
+        endDate: Date? = nil,
         keyResults: [KeyResult] = []
     ) {
         self.id = id
         self.title = title
         self.colorHex = colorHex
+        self.endDate = endDate
         self.keyResults = keyResults
     }
 
