@@ -6,19 +6,22 @@ struct Objective: Identifiable, Hashable {
     var colorHex: String?
     var endDate: Date?
     var keyResults: [KeyResult]
+    var completedAt: Date?
 
     init(
         id: UUID = UUID(),
         title: String,
         colorHex: String? = nil,
         endDate: Date? = nil,
-        keyResults: [KeyResult] = []
+        keyResults: [KeyResult] = [],
+        completedAt: Date? = nil
     ) {
         self.id = id
         self.title = title
         self.colorHex = colorHex
         self.endDate = endDate
         self.keyResults = keyResults
+        self.completedAt = completedAt
     }
 
     var progress: Double {

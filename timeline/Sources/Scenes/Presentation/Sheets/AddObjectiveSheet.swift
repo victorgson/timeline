@@ -23,6 +23,25 @@ struct AddObjectiveSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
+                    if viewModel.isEditing, viewModel.isCompleted, let completedDateText = viewModel.completedDateText {
+                        SheetCardContainer {
+                            HStack(alignment: .top, spacing: 12) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.system(size: 28))
+                                    .foregroundStyle(Color.accentColor)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Objective Completed")
+                                        .font(.headline)
+                                        .foregroundStyle(.primary)
+                                    Text("Completed on \(completedDateText)")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                                Spacer(minLength: 0)
+                            }
+                        }
+                    }
+
                     SheetCardContainer(title: "Objective") {
                         VStack(alignment: .leading, spacing: 20) {
                             SheetLabeledTextField(

@@ -42,7 +42,8 @@ private extension SessionTrackerManagedObjectModelFactory {
             attribute(name: "id", type: .UUIDAttributeType, isOptional: true),
             attribute(name: "title", type: .stringAttributeType, isOptional: false, defaultValue: ""),
             attribute(name: "colorHex", type: .stringAttributeType, isOptional: true),
-            attribute(name: "endDate", type: .dateAttributeType, isOptional: true)
+            attribute(name: "endDate", type: .dateAttributeType, isOptional: true),
+            attribute(name: "completedAt", type: .dateAttributeType, isOptional: true)
         ]
 
         let keyResults = relationship(

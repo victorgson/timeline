@@ -214,6 +214,7 @@ private extension SessionTrackerViewModel {
         guard let index = objectives.firstIndex(where: { $0.id == id }) else { return }
         var objective = objectives[index]
         mutation(&objective)
+        updateCompletionStatus(for: &objective)
         objectives[index] = objective
         Task {
             do {

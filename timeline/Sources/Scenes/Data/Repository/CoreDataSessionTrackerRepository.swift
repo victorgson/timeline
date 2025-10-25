@@ -50,6 +50,7 @@ final class CoreDataSessionTrackerRepository: SessionTrackerRepository {
             entity.title = objective.title
             entity.colorHex = objective.colorHex
             entity.endDate = objective.endDate
+            entity.completedAt = objective.completedAt
             Self.syncKeyResults(objective.keyResults, to: entity, in: context)
             try Self.saveIfNeeded(context: context)
         }
@@ -184,7 +185,8 @@ private extension CoreDataSessionTrackerRepository {
             title: entity.title,
             colorHex: entity.colorHex,
             endDate: entity.endDate,
-            keyResults: keyResults
+            keyResults: keyResults,
+            completedAt: entity.completedAt
         )
     }
 

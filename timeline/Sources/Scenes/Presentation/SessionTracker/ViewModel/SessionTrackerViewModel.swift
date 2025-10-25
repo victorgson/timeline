@@ -28,4 +28,15 @@ final class SessionTrackerViewModel {
             await loadInitialData()
         }
     }
+
+    func updateCompletionStatus(for objective: inout Objective, now: @autoclosure () -> Date = .now) {
+        let isComplete = objective.progress >= 1
+        if isComplete {
+            if objective.completedAt == nil {
+                objective.completedAt = now()
+            }
+        } else {
+            objective.completedAt = nil
+        }
+    }
 }

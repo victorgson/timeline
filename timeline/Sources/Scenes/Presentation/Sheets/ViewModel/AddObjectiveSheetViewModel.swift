@@ -11,6 +11,7 @@ final class AddObjectiveSheetViewModel {
     var isEndDateEnabled: Bool
     var endDate: Date
     var keyResults: [KeyResultForm]
+    private(set) var completedAt: Date?
 
     init(
         mode: Mode = .create,
@@ -25,11 +26,13 @@ final class AddObjectiveSheetViewModel {
             self.isEndDateEnabled = false
             self.endDate = .now
             self.keyResults = [KeyResultForm(metricType: .quantity)]
+            self.completedAt = nil
         case .edit(let objective):
             self.title = objective.title
             self.color = Color(hex: objective.colorHex ?? "") ?? defaultColor
             self.isEndDateEnabled = objective.endDate != nil
             self.endDate = objective.endDate ?? .now
+            self.completedAt = objective.completedAt
             self.keyResults = objective.keyResults.map { keyResult in
                 let metricType: KeyResultForm.MetricType
                 if keyResult.timeMetric != nil, keyResult.quantityMetric == nil {
@@ -96,6 +99,15 @@ final class AddObjectiveSheetViewModel {
         isEndDateEnabled ? endDate : nil
     }
 
+    var isCompleted: Bool {
+        completedAt != nil
+    }
+
+    var completedDateText: String? {
+        guard let completedAt else { return nil }
+        return Self.completedDateFormatter.string(from: completedAt)
+    }
+
     func addKeyResult() {
         keyResults.append(KeyResultForm(metricType: .quantity))
     }
@@ -141,4 +153,11 @@ final class AddObjectiveSheetViewModel {
         }
         return String(value)
     }
+
+    private static let completedDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }()
 }

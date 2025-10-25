@@ -39,6 +39,7 @@ private extension SessionTrackerViewModel {
         updated.colorHex = submission.colorHex
         updated.endDate = submission.endDate
         updated.keyResults = submission.keyResults
+        updateCompletionStatus(for: &updated)
         objectives[index] = updated
 
         do {
