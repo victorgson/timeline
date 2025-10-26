@@ -7,6 +7,7 @@ final class ObjectiveEntity: NSManagedObject {
     @NSManaged var colorHex: String?
     @NSManaged var endDate: Date?
     @NSManaged var completedAt: Date?
+    @NSManaged var archivedAt: Date?
     @NSManaged var keyResults: NSSet?
     @NSManaged var activities: NSSet?
 }

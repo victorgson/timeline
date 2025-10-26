@@ -12,6 +12,7 @@ final class AddObjectiveSheetViewModel {
     var endDate: Date
     var keyResults: [KeyResultForm]
     private(set) var completedAt: Date?
+    private(set) var archivedAt: Date?
 
     init(
         mode: Mode = .create,
@@ -27,12 +28,14 @@ final class AddObjectiveSheetViewModel {
             self.endDate = .now
             self.keyResults = [KeyResultForm(metricType: .quantity)]
             self.completedAt = nil
+            self.archivedAt = nil
         case .edit(let objective):
             self.title = objective.title
             self.color = Color(hex: objective.colorHex ?? "") ?? defaultColor
             self.isEndDateEnabled = objective.endDate != nil
             self.endDate = objective.endDate ?? .now
             self.completedAt = objective.completedAt
+            self.archivedAt = objective.archivedAt
             self.keyResults = objective.keyResults.map { keyResult in
                 let metricType: KeyResultForm.MetricType
                 if keyResult.timeMetric != nil, keyResult.quantityMetric == nil {
@@ -103,9 +106,26 @@ final class AddObjectiveSheetViewModel {
         completedAt != nil
     }
 
+    var isArchived: Bool {
+        archivedAt != nil
+    }
+
+    var canArchive: Bool {
+        isEditing && isCompleted && !isArchived
+    }
+
+    var canRestore: Bool {
+        isEditing && isArchived
+    }
+
     var completedDateText: String? {
         guard let completedAt else { return nil }
         return Self.completedDateFormatter.string(from: completedAt)
+    }
+
+    var archivedDateText: String? {
+        guard let archivedAt else { return nil }
+        return Self.completedDateFormatter.string(from: archivedAt)
     }
 
     func addKeyResult() {

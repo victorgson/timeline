@@ -7,6 +7,7 @@ struct Objective: Identifiable, Hashable {
     var endDate: Date?
     var keyResults: [KeyResult]
     var completedAt: Date?
+    var archivedAt: Date?
 
     init(
         id: UUID = UUID(),
@@ -14,7 +15,8 @@ struct Objective: Identifiable, Hashable {
         colorHex: String? = nil,
         endDate: Date? = nil,
         keyResults: [KeyResult] = [],
-        completedAt: Date? = nil
+        completedAt: Date? = nil,
+        archivedAt: Date? = nil
     ) {
         self.id = id
         self.title = title
@@ -22,11 +24,16 @@ struct Objective: Identifiable, Hashable {
         self.endDate = endDate
         self.keyResults = keyResults
         self.completedAt = completedAt
+        self.archivedAt = archivedAt
     }
 
     var progress: Double {
         guard !keyResults.isEmpty else { return 0 }
         let total = keyResults.reduce(0) { $0 + $1.progress }
         return min(max(total / Double(keyResults.count), 0), 1)
+    }
+
+    var isArchived: Bool {
+        archivedAt != nil
     }
 }

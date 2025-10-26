@@ -6,15 +6,21 @@ struct AddObjectiveSheet: View {
     @State private var viewModel: AddObjectiveSheetViewModel
     let onSave: (ObjectiveFormSubmission) -> Void
     let onCancel: () -> Void
+    let onArchive: (() -> Void)?
+    let onUnarchive: (() -> Void)?
 
     init(
         viewModel: AddObjectiveSheetViewModel = AddObjectiveSheetViewModel(),
         onSave: @escaping (ObjectiveFormSubmission) -> Void,
-        onCancel: @escaping () -> Void
+        onCancel: @escaping () -> Void,
+        onArchive: (() -> Void)? = nil,
+        onUnarchive: (() -> Void)? = nil
     ) {
         _viewModel = State(initialValue: viewModel)
         self.onSave = onSave
         self.onCancel = onCancel
+        self.onArchive = onArchive
+        self.onUnarchive = onUnarchive
     }
 
     var body: some View {
@@ -23,21 +29,71 @@ struct AddObjectiveSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    if viewModel.isEditing, viewModel.isCompleted, let completedDateText = viewModel.completedDateText {
+                    if viewModel.isEditing, (viewModel.isCompleted || viewModel.isArchived) {
                         SheetCardContainer {
-                            HStack(alignment: .top, spacing: 12) {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .font(.system(size: 28))
-                                    .foregroundStyle(Color.accentColor)
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Objective Completed")
-                                        .font(.headline)
-                                        .foregroundStyle(.primary)
-                                    Text("Completed on \(completedDateText)")
-                                        .font(.subheadline)
-                                        .foregroundStyle(.secondary)
+                            VStack(alignment: .leading, spacing: 16) {
+                                HStack(alignment: .top, spacing: 12) {
+                                    Image(systemName: viewModel.isArchived ? "archivebox.fill" : "checkmark.circle.fill")
+                                        .font(.system(size: 28))
+                                        .foregroundStyle(Color.accentColor)
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(viewModel.isArchived ? "Objective Archived" : "Objective Completed")
+                                            .font(.headline)
+                                            .foregroundStyle(.primary)
+                                        if viewModel.isArchived, let archivedText = viewModel.archivedDateText {
+                                            Text("Archived on \(archivedText)")
+                                                .font(.subheadline)
+                                                .foregroundStyle(.secondary)
+                                        } else if let completedText = viewModel.completedDateText {
+                                            Text("Completed on \(completedText)")
+                                                .font(.subheadline)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                    }
+                                    Spacer(minLength: 0)
                                 }
-                                Spacer(minLength: 0)
+
+                                if viewModel.canArchive {
+                                    Button {
+                                        onArchive?()
+                                    } label: {
+                                        Label("Move to Archive", systemImage: "archivebox.fill")
+                                            .font(.headline)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 12)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                            .fill(Color.accentColor.opacity(0.15))
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                            .stroke(Color.accentColor.opacity(0.35), lineWidth: 1)
+                                    )
+                                    .foregroundColor(.accentColor)
+                                }
+
+                                if viewModel.canRestore {
+                                    Button {
+                                        onUnarchive?()
+                                    } label: {
+                                        Label("Restore Objective", systemImage: "arrow.uturn.backward.circle.fill")
+                                            .font(.headline)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, 12)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                            .fill(Color.accentColor.opacity(0.15))
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                            .stroke(Color.accentColor.opacity(0.35), lineWidth: 1)
+                                    )
+                                    .foregroundColor(.accentColor)
+                                }
                             }
                         }
                     }

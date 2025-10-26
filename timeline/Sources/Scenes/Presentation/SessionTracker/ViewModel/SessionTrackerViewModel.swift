@@ -12,6 +12,15 @@ final class SessionTrackerViewModel {
     var activities: [Activity]
     var activityDraft: ActivityDraft?
     var sessionStartDate: Date?
+    var activeObjectives: [Objective] {
+        objectives.filter { !$0.isArchived }
+    }
+    var archivedObjectives: [Objective] {
+        objectives.filter { $0.isArchived }
+    }
+    var hasArchivedObjectives: Bool {
+        !archivedObjectives.isEmpty
+    }
 
     init(
         useCases: SessionTrackerUseCases,
@@ -37,6 +46,38 @@ final class SessionTrackerViewModel {
             }
         } else {
             objective.completedAt = nil
+        }
+    }
+
+    func archiveObjective(withID id: UUID, now: @autoclosure () -> Date = .now) {
+        guard let index = objectives.firstIndex(where: { $0.id == id }) else { return }
+        var objective = objectives[index]
+        guard objective.progress >= 1, !objective.isArchived else { return }
+        objective.archivedAt = now()
+        updateCompletionStatus(for: &objective)
+        objectives[index] = objective
+        Task {
+            do {
+                try await useCases.upsertObjective.execute(objective)
+            } catch {
+                assertionFailure("Failed to archive objective: \(error)")
+            }
+        }
+    }
+
+    func unarchiveObjective(withID id: UUID) {
+        guard let index = objectives.firstIndex(where: { $0.id == id }) else { return }
+        var objective = objectives[index]
+        guard objective.isArchived else { return }
+        objective.archivedAt = nil
+        updateCompletionStatus(for: &objective)
+        objectives[index] = objective
+        Task {
+            do {
+                try await useCases.upsertObjective.execute(objective)
+            } catch {
+                assertionFailure("Failed to unarchive objective: \(error)")
+            }
         }
     }
 }

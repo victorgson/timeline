@@ -6,6 +6,7 @@ struct SessionTrackerView: View {
     private let calendar = Calendar.current
     @State private var isPresentingObjectiveSheet = false
     @State private var objectiveSheetViewModel = AddObjectiveSheetViewModel()
+    @State private var isShowingArchivedObjectives = false
     @State private var showFullScreenTimer = false
     init(viewModel: SessionTrackerViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -87,7 +88,7 @@ struct SessionTrackerView: View {
         )) {
             if let draft = bindableViewModel.activityDraft {
                 ActivityLinkSheet(
-                    objectives: bindableViewModel.objectives,
+                    objectives: bindableViewModel.activeObjectives,
                     draft: draft,
                     onSelectObjective: { objectiveID in
                         bindableViewModel.setDraftObjective(objectiveID)
@@ -112,7 +113,35 @@ struct SessionTrackerView: View {
             } onCancel: {
                 isPresentingObjectiveSheet = false
                 objectiveSheetViewModel = AddObjectiveSheetViewModel()
+            } onArchive: {
+                if let id = objectiveSheetViewModel.objectiveID {
+                    bindableViewModel.archiveObjective(withID: id)
+                }
+                isPresentingObjectiveSheet = false
+                objectiveSheetViewModel = AddObjectiveSheetViewModel()
+            } onUnarchive: {
+                if let id = objectiveSheetViewModel.objectiveID {
+                    bindableViewModel.unarchiveObjective(withID: id)
+                }
+                isPresentingObjectiveSheet = false
+                objectiveSheetViewModel = AddObjectiveSheetViewModel()
             }
+        }
+        .sheet(isPresented: $isShowingArchivedObjectives) {
+            ArchivedObjectivesView(
+                objectives: bindableViewModel.archivedObjectives,
+                onClose: {
+                    isShowingArchivedObjectives = false
+                },
+                onSelect: { objective in
+                    isShowingArchivedObjectives = false
+                    objectiveSheetViewModel = AddObjectiveSheetViewModel(
+                        mode: .edit(objective),
+                        defaultColor: ObjectiveColorProvider.color(for: objective)
+                    )
+                    isPresentingObjectiveSheet = true
+                }
+            )
         }
         .onChange(of: bindableViewModel.isTimerRunning) { _, running in
             if !running {
@@ -123,11 +152,25 @@ struct SessionTrackerView: View {
 
     private func objectivesSection(viewModel: SessionTrackerViewModel) -> some View {
         return VStack(alignment: .leading, spacing: 12) {
-            Text("Objectives")
-                .font(.headline)
-                .foregroundStyle(.primary)
-                .padding(.horizontal, 20)
-            if viewModel.objectives.isEmpty {
+            HStack {
+                Text("Objectives")
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                Spacer()
+                if viewModel.hasArchivedObjectives {
+                    Button {
+                        isShowingArchivedObjectives = true
+                    } label: {
+                        Label("Archived", systemImage: "archivebox")
+                            .labelStyle(TrailingIconLabelStyle())
+                            .font(.subheadline.weight(.semibold))
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.trailing, 4)
+                }
+            }
+            .padding(.horizontal, 20)
+            if viewModel.activeObjectives.isEmpty {
                 AddObjectiveCircleButton {
                     objectiveSheetViewModel = AddObjectiveSheetViewModel()
                     isPresentingObjectiveSheet = true
@@ -135,7 +178,7 @@ struct SessionTrackerView: View {
                 .padding(.horizontal, 20)
             } else {
                 ObjectiveCardView(
-                    objectives: viewModel.objectives,
+                    objectives: viewModel.activeObjectives,
                     onAddObjective: {
                         objectiveSheetViewModel = AddObjectiveSheetViewModel()
                         isPresentingObjectiveSheet = true
@@ -176,5 +219,14 @@ struct SessionTrackerView: View {
         formatter.dateStyle = .medium
         formatter.timeStyle = .none
         return formatter.string(from: day)
+    }
+}
+
+private struct TrailingIconLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 6) {
+            configuration.title
+            configuration.icon
+        }
     }
 }
