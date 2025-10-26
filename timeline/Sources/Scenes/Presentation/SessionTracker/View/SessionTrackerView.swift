@@ -4,8 +4,7 @@ import Observation
 struct SessionTrackerView: View {
     @State private var viewModel: SessionTrackerViewModel
     private let calendar = Calendar.current
-    @State private var isPresentingObjectiveSheet = false
-    @State private var objectiveSheetViewModel = AddObjectiveSheetViewModel()
+    @State private var objectiveSheetViewModel: AddObjectiveSheetViewModel?
     @State private var isShowingArchivedObjectives = false
     @State private var showFullScreenTimer = false
     init(viewModel: SessionTrackerViewModel) {
@@ -105,26 +104,22 @@ struct SessionTrackerView: View {
                 .presentationDetents([.medium, .large])
             }
         }
-        .sheet(isPresented: $isPresentingObjectiveSheet) {
-            AddObjectiveSheet(viewModel: objectiveSheetViewModel) { submission in
+        .sheet(item: $objectiveSheetViewModel) { sheetViewModel in
+            AddObjectiveSheet(viewModel: sheetViewModel) { submission in
                 bindableViewModel.handleObjectiveSubmission(submission)
-                isPresentingObjectiveSheet = false
-                objectiveSheetViewModel = AddObjectiveSheetViewModel()
+                objectiveSheetViewModel = nil
             } onCancel: {
-                isPresentingObjectiveSheet = false
-                objectiveSheetViewModel = AddObjectiveSheetViewModel()
+                objectiveSheetViewModel = nil
             } onArchive: {
-                if let id = objectiveSheetViewModel.objectiveID {
+                if let id = sheetViewModel.objectiveID {
                     bindableViewModel.archiveObjective(withID: id)
                 }
-                isPresentingObjectiveSheet = false
-                objectiveSheetViewModel = AddObjectiveSheetViewModel()
+                objectiveSheetViewModel = nil
             } onUnarchive: {
-                if let id = objectiveSheetViewModel.objectiveID {
+                if let id = sheetViewModel.objectiveID {
                     bindableViewModel.unarchiveObjective(withID: id)
                 }
-                isPresentingObjectiveSheet = false
-                objectiveSheetViewModel = AddObjectiveSheetViewModel()
+                objectiveSheetViewModel = nil
             }
         }
         .sheet(isPresented: $isShowingArchivedObjectives) {
@@ -139,7 +134,6 @@ struct SessionTrackerView: View {
                         mode: .edit(objective),
                         defaultColor: ObjectiveColorProvider.color(for: objective)
                     )
-                    isPresentingObjectiveSheet = true
                 }
             )
         }
@@ -173,7 +167,6 @@ struct SessionTrackerView: View {
             if viewModel.activeObjectives.isEmpty {
                 AddObjectiveCircleButton {
                     objectiveSheetViewModel = AddObjectiveSheetViewModel()
-                    isPresentingObjectiveSheet = true
                 }
                 .padding(.horizontal, 20)
             } else {
@@ -181,14 +174,12 @@ struct SessionTrackerView: View {
                     objectives: viewModel.activeObjectives,
                     onAddObjective: {
                         objectiveSheetViewModel = AddObjectiveSheetViewModel()
-                        isPresentingObjectiveSheet = true
                     },
                     onSelectObjective: { objective in
                         objectiveSheetViewModel = AddObjectiveSheetViewModel(
                             mode: .edit(objective),
                             defaultColor: ObjectiveColorProvider.color(for: objective)
                         )
-                        isPresentingObjectiveSheet = true
                     }
                 )
             }

@@ -3,7 +3,7 @@ import SwiftUI
 import UIKit
 
 struct AddObjectiveSheet: View {
-    @State private var viewModel: AddObjectiveSheetViewModel
+    @Bindable private var viewModel: AddObjectiveSheetViewModel
     let onSave: (ObjectiveFormSubmission) -> Void
     let onCancel: () -> Void
     let onArchive: (() -> Void)?
@@ -16,7 +16,7 @@ struct AddObjectiveSheet: View {
         onArchive: (() -> Void)? = nil,
         onUnarchive: (() -> Void)? = nil
     ) {
-        _viewModel = State(initialValue: viewModel)
+        self.viewModel = viewModel
         self.onSave = onSave
         self.onCancel = onCancel
         self.onArchive = onArchive
@@ -24,12 +24,10 @@ struct AddObjectiveSheet: View {
     }
 
     var body: some View {
-        @Bindable var bindableViewModel = viewModel
-
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    if viewModel.isEditing, (viewModel.isCompleted || viewModel.isArchived) {
+                    if viewModel.isEditing, viewModel.isCompleted || viewModel.isArchived {
                         SheetCardContainer {
                             VStack(alignment: .leading, spacing: 16) {
                                 HStack(alignment: .top, spacing: 12) {
@@ -103,13 +101,13 @@ struct AddObjectiveSheet: View {
                             SheetLabeledTextField(
                                 title: "Title",
                                 placeholder: "Ship the quarterly roadmap",
-                                text: $bindableViewModel.title,
+                                text: $viewModel.title,
                                 axis: .vertical,
                                 autocapitalization: .words
                             )
 
                             VStack(alignment: .leading, spacing: 12) {
-                                Toggle(isOn: $bindableViewModel.isEndDateEnabled.animation()) {
+                                Toggle(isOn: $viewModel.isEndDateEnabled.animation()) {
                                     Text("Set End Date")
                                         .sheetCardLabelStyle()
                                 }
@@ -119,10 +117,10 @@ struct AddObjectiveSheet: View {
                                     .font(.footnote)
                                     .foregroundStyle(.secondary)
 
-                                if bindableViewModel.isEndDateEnabled {
+                                if viewModel.isEndDateEnabled {
                                     DatePicker(
                                         "Objective End Date",
-                                        selection: $bindableViewModel.endDate,
+                                        selection: $viewModel.endDate,
                                         displayedComponents: [.date]
                                     )
                                     .datePickerStyle(.compact)
@@ -144,7 +142,7 @@ struct AddObjectiveSheet: View {
 
                             Spacer()
 
-                            ColorPicker("Objective Color", selection: $bindableViewModel.color, supportsOpacity: false)
+                            ColorPicker("Objective Color", selection: $viewModel.color, supportsOpacity: false)
                                 .labelsHidden()
                                 .frame(width: 48, height: 48)
                                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
@@ -156,18 +154,18 @@ struct AddObjectiveSheet: View {
                         .padding(.vertical, 4)
                     }
 
-                    ForEach(bindableViewModel.keyResults) { keyResult in
+                    ForEach(viewModel.keyResults) { keyResult in
                         AddObjectiveSheet.KeyResultCard(
                             title: viewModel.sectionTitle(forKeyResult: keyResult.id),
                             keyResult: Binding(
                                 get: {
-                                    bindableViewModel.keyResults.first(where: { $0.id == keyResult.id }) ?? keyResult
+                                    viewModel.keyResults.first(where: { $0.id == keyResult.id }) ?? keyResult
                                 },
                                 set: { newValue in
-                                    bindableViewModel.updateKeyResult(newValue)
+                                    viewModel.updateKeyResult(newValue)
                                 }
                             ),
-                            canRemove: bindableViewModel.keyResults.count > 1,
+                            canRemove: viewModel.keyResults.count > 1,
                             onRemove: { viewModel.removeKeyResult(id: keyResult.id) }
                         )
                     }

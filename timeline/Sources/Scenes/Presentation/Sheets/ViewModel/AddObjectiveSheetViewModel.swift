@@ -4,6 +4,7 @@ import SwiftUI
 
 @Observable
 final class AddObjectiveSheetViewModel {
+    let instanceID = UUID()
     private(set) var mode: Mode
 
     var title: String
@@ -180,4 +181,8 @@ final class AddObjectiveSheetViewModel {
         formatter.timeStyle = .short
         return formatter
     }()
+}
+
+extension AddObjectiveSheetViewModel: Identifiable {
+    var id: UUID { instanceID }
 }
