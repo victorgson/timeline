@@ -16,8 +16,13 @@ struct SessionsApp: App {
             trackers: [FirebaseTracker(), LogFirebaseTracker()]
         )
 
+        #if DEVELOPMENT
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: "test_XuVymhSmFuWhMzaripgyhEZBhut")
+        #else
+        Purchases.logLevel = .debug
+        Purchases.configure(withAPIKey: "test_XuVymhSmFuWhMzaripgyhEZBhut")
+        #endif
 
         let isPremiumEnabled = false
         // Replace the hard-coded flag above with the real entitlement state from StoreKit / RevenueCat.
