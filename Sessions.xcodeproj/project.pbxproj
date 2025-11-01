@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		6A2E5E322EB163C9000FBAE6 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2E5E312EB163C9000FBAE6 /* WidgetKit.framework */; };
 		6A2E5E342EB163C9000FBAE6 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2E5E332EB163C9000FBAE6 /* SwiftUI.framework */; };
-		6A2E5E412EB163CA000FBAE6 /* session.activityExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6A2E5E2F2EB163C9000FBAE6 /* session.activityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6A2E5E412EB163CA000FBAE6 /* SessionsLiveActivity.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6A2E5E2F2EB163C9000FBAE6 /* SessionsLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,7 +29,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				6A2E5E412EB163CA000FBAE6 /* session.activityExtension.appex in Embed App Extensions */,
+				6A2E5E412EB163CA000FBAE6 /* SessionsLiveActivity.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -37,61 +37,61 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		37E868972EA1AAEC00B92107 /* Timeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timeline.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6A2E5E2F2EB163C9000FBAE6 /* session.activityExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = session.activityExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		37E868972EA1AAEC00B92107 /* Sessions.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sessions.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A2E5E2F2EB163C9000FBAE6 /* SessionsLiveActivity.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SessionsLiveActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A2E5E312EB163C9000FBAE6 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		6A2E5E332EB163C9000FBAE6 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		6A2E5E452EB163CA000FBAE6 /* Exceptions for "session.activity" folder in "session.activityExtension" target */ = {
+		6A2E5E452EB163CA000FBAE6 /* Exceptions for "LiveActivity" folder in "SessionsLiveActivity" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 6A2E5E2E2EB163C9000FBAE6 /* session.activityExtension */;
+			target = 6A2E5E2E2EB163C9000FBAE6 /* SessionsLiveActivity */;
 		};
-		6A2E5E4E2EB16405000FBAE6 /* Exceptions for "timeline" folder in "session.activityExtension" target */ = {
+		6A2E5E4E2EB16405000FBAE6 /* Exceptions for "Sessions" folder in "SessionsLiveActivity" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Sources/Application/LiveActivities/SessionLiveActivityController.swift,
 			);
-			target = 6A2E5E2E2EB163C9000FBAE6 /* session.activityExtension */;
+			target = 6A2E5E2E2EB163C9000FBAE6 /* SessionsLiveActivity */;
 		};
-		6A2E5E522EB1641B000FBAE6 /* Exceptions for "session.activity" folder in "Timeline" target */ = {
+		6A2E5E522EB1641B000FBAE6 /* Exceptions for "LiveActivity" folder in "Sessions" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				SessionLiveActivityAttributes.swift,
 				SessionLiveActivityWidget.swift,
 			);
-			target = 37E868962EA1AAEC00B92107 /* Timeline */;
+			target = 37E868962EA1AAEC00B92107 /* Sessions */;
 		};
-		6AD988662EAC2AFD00BF64E2 /* Exceptions for "timeline" folder in "Timeline" target */ = {
+		6AD988662EAC2AFD00BF64E2 /* Exceptions for "Sessions" folder in "Sessions" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 37E868962EA1AAEC00B92107 /* Timeline */;
+			target = 37E868962EA1AAEC00B92107 /* Sessions */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		37E868992EA1AAEC00B92107 /* timeline */ = {
+		37E868992EA1AAEC00B92107 /* Sessions */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				6AD988662EAC2AFD00BF64E2 /* Exceptions for "timeline" folder in "Timeline" target */,
-				6A2E5E4E2EB16405000FBAE6 /* Exceptions for "timeline" folder in "session.activityExtension" target */,
+				6AD988662EAC2AFD00BF64E2 /* Exceptions for "Sessions" folder in "Sessions" target */,
+				6A2E5E4E2EB16405000FBAE6 /* Exceptions for "Sessions" folder in "SessionsLiveActivity" target */,
 			);
-			path = timeline;
+			path = Sessions;
 			sourceTree = "<group>";
 		};
-		6A2E5E352EB163C9000FBAE6 /* session.activity */ = {
+		6A2E5E352EB163C9000FBAE6 /* LiveActivity */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				6A2E5E522EB1641B000FBAE6 /* Exceptions for "session.activity" folder in "Timeline" target */,
-				6A2E5E452EB163CA000FBAE6 /* Exceptions for "session.activity" folder in "session.activityExtension" target */,
+				6A2E5E522EB1641B000FBAE6 /* Exceptions for "LiveActivity" folder in "Sessions" target */,
+				6A2E5E452EB163CA000FBAE6 /* Exceptions for "LiveActivity" folder in "SessionsLiveActivity" target */,
 			);
-			path = session.activity;
+			path = LiveActivity;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -119,8 +119,8 @@
 		37E8688E2EA1AAEC00B92107 = {
 			isa = PBXGroup;
 			children = (
-				37E868992EA1AAEC00B92107 /* timeline */,
-				6A2E5E352EB163C9000FBAE6 /* session.activity */,
+				37E868992EA1AAEC00B92107 /* Sessions */,
+				6A2E5E352EB163C9000FBAE6 /* LiveActivity */,
 				6A2E5E302EB163C9000FBAE6 /* Frameworks */,
 				37E868982EA1AAEC00B92107 /* Products */,
 			);
@@ -129,8 +129,8 @@
 		37E868982EA1AAEC00B92107 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				37E868972EA1AAEC00B92107 /* Timeline.app */,
-				6A2E5E2F2EB163C9000FBAE6 /* session.activityExtension.appex */,
+				37E868972EA1AAEC00B92107 /* Sessions.app */,
+				6A2E5E2F2EB163C9000FBAE6 /* SessionsLiveActivity.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -147,9 +147,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		37E868962EA1AAEC00B92107 /* Timeline */ = {
+		37E868962EA1AAEC00B92107 /* Sessions */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 37E868A22EA1AAEF00B92107 /* Build configuration list for PBXNativeTarget "Timeline" */;
+			buildConfigurationList = 37E868A22EA1AAEF00B92107 /* Build configuration list for PBXNativeTarget "Sessions" */;
 			buildPhases = (
 				37E868932EA1AAEC00B92107 /* Sources */,
 				37E868942EA1AAEC00B92107 /* Frameworks */,
@@ -163,18 +163,18 @@
 				6A2E5E402EB163CA000FBAE6 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				37E868992EA1AAEC00B92107 /* timeline */,
+				37E868992EA1AAEC00B92107 /* Sessions */,
 			);
-			name = Timeline;
+			name = Sessions;
 			packageProductDependencies = (
 			);
 			productName = timeline;
-			productReference = 37E868972EA1AAEC00B92107 /* Timeline.app */;
+			productReference = 37E868972EA1AAEC00B92107 /* Sessions.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6A2E5E2E2EB163C9000FBAE6 /* session.activityExtension */ = {
+		6A2E5E2E2EB163C9000FBAE6 /* SessionsLiveActivity */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6A2E5E422EB163CA000FBAE6 /* Build configuration list for PBXNativeTarget "session.activityExtension" */;
+			buildConfigurationList = 6A2E5E422EB163CA000FBAE6 /* Build configuration list for PBXNativeTarget "SessionsLiveActivity" */;
 			buildPhases = (
 				6A2E5E2B2EB163C9000FBAE6 /* Sources */,
 				6A2E5E2C2EB163C9000FBAE6 /* Frameworks */,
@@ -185,13 +185,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				6A2E5E352EB163C9000FBAE6 /* session.activity */,
+				6A2E5E352EB163C9000FBAE6 /* LiveActivity */,
 			);
-			name = session.activityExtension;
+			name = SessionsLiveActivity;
 			packageProductDependencies = (
 			);
 			productName = session.activityExtension;
-			productReference = 6A2E5E2F2EB163C9000FBAE6 /* session.activityExtension.appex */;
+			productReference = 6A2E5E2F2EB163C9000FBAE6 /* SessionsLiveActivity.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -212,7 +212,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 37E868922EA1AAEC00B92107 /* Build configuration list for PBXProject "Timeline" */;
+			buildConfigurationList = 37E868922EA1AAEC00B92107 /* Build configuration list for PBXProject "Sessions" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -229,8 +229,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				37E868962EA1AAEC00B92107 /* Timeline */,
-				6A2E5E2E2EB163C9000FBAE6 /* session.activityExtension */,
+				37E868962EA1AAEC00B92107 /* Sessions */,
+				6A2E5E2E2EB163C9000FBAE6 /* SessionsLiveActivity */,
 			);
 		};
 /* End PBXProject section */
@@ -272,7 +272,7 @@
 /* Begin PBXTargetDependency section */
 		6A2E5E402EB163CA000FBAE6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6A2E5E2E2EB163C9000FBAE6 /* session.activityExtension */;
+			target = 6A2E5E2E2EB163C9000FBAE6 /* SessionsLiveActivity */;
 			targetProxy = 6A2E5E3F2EB163CA000FBAE6 /* PBXContainerItemProxy */;
 		};
 		6AD988E52EAD4B2800BF64E2 /* PBXTargetDependency */ = {
@@ -408,14 +408,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Timeline/Timeline.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Sessions/Sessions.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 96G8B7SJ53;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Timeline/Info.plist;
+				INFOPLIST_FILE = Sessions/Info.plist;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -426,7 +427,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.timelineapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -444,14 +445,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Timeline/Timeline.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Sessions/Sessions.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 96G8B7SJ53;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Timeline/Info.plist;
+				INFOPLIST_FILE = Sessions/Info.plist;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -462,7 +464,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.timelineapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -485,8 +487,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 96G8B7SJ53;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = session.activity/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = session.activity;
+				INFOPLIST_FILE = LiveActivity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SessionsLiveActivity;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -494,7 +496,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.gsonlabs.timelineapp.session-activity";
+				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp.liveactivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -516,8 +518,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 96G8B7SJ53;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = session.activity/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = session.activity;
+				INFOPLIST_FILE = LiveActivity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SessionsLiveActivity;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -525,7 +527,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.gsonlabs.timelineapp.session-activity";
+				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp.liveactivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -540,7 +542,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		37E868922EA1AAEC00B92107 /* Build configuration list for PBXProject "Timeline" */ = {
+		37E868922EA1AAEC00B92107 /* Build configuration list for PBXProject "Sessions" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				37E868A02EA1AAEF00B92107 /* Debug */,
@@ -549,7 +551,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		37E868A22EA1AAEF00B92107 /* Build configuration list for PBXNativeTarget "Timeline" */ = {
+		37E868A22EA1AAEF00B92107 /* Build configuration list for PBXNativeTarget "Sessions" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				37E868A32EA1AAEF00B92107 /* Debug */,
@@ -558,7 +560,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6A2E5E422EB163CA000FBAE6 /* Build configuration list for PBXNativeTarget "session.activityExtension" */ = {
+		6A2E5E422EB163CA000FBAE6 /* Build configuration list for PBXNativeTarget "SessionsLiveActivity" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6A2E5E432EB163CA000FBAE6 /* Debug */,

@@ -2,7 +2,7 @@ import SwiftUI
 
 @main
 @MainActor
-struct TimelineApp: App {
+struct SessionsApp: App {
     @State private var sessionTrackerViewModel: SessionTrackerViewModel
 
     init() {
