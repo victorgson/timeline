@@ -1,4 +1,5 @@
 import Foundation
+import Tracking
 
 @MainActor
 extension SessionTrackerViewModel {
@@ -19,6 +20,7 @@ extension SessionTrackerViewModel {
     }
 
     func deleteActivity(_ activity: Activity) {
+        trackAction(TrackingEvent.SessionTracker.Action(value: .deleteActivity(id: activity.id)))
         Task { await deleteActivityAsync(activity) }
     }
 
@@ -34,6 +36,6 @@ extension SessionTrackerViewModel {
             applyTimeAllocations(activity.keyResultAllocations, to: objectiveID, adding: false)
         }
 
-        haptics.triggerNotification(DefaultHapticBox.Notification.warning)
+        hapticBox.triggerNotification(DefaultHapticBox.Notification.warning)
     }
 }

@@ -1,5 +1,6 @@
 import SwiftUI
 import Observation
+import Tracking
 
 struct SessionTrackerView: View {
     @State private var viewModel: SessionTrackerViewModel
@@ -26,14 +27,16 @@ struct SessionTrackerView: View {
                 .listSectionSeparator(.hidden)
 
                 Section {
-                    SessionTimerView(viewModel: bindableViewModel) {
-                        bindableViewModel.startSession()
-                        showFullScreenTimer = true
-                    }
+                SessionTimerView(viewModel: bindableViewModel) {
+                    bindableViewModel.startSession()
+                    showFullScreenTimer = true
+                    bindableViewModel.trackAction(TrackingEvent.SessionTracker.Action(value: .showFullScreenTimer))
+                }
                     .contentShape(Rectangle())
                     .onTapGesture {
                         if bindableViewModel.isTimerRunning {
                             showFullScreenTimer = true
+                            bindableViewModel.trackAction(TrackingEvent.SessionTracker.Action(value: .showFullScreenTimer))
                         }
                     }
                     .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 24, trailing: 20))
@@ -86,8 +89,14 @@ struct SessionTrackerView: View {
                             .labelStyle(.iconOnly)
                     }
                     .accessibilityLabel("Insights")
+                    .simultaneousGesture(TapGesture().onEnded {
+                        bindableViewModel.trackAction(TrackingEvent.SessionTracker.Action(value: .openInsights))
+                    })
                 }
             }
+        }
+        .onAppear {
+            viewModel.trackPageView()
         }
         .sheet(isPresented: Binding(
             get: { bindableViewModel.activityDraft != nil },
@@ -147,6 +156,7 @@ struct SessionTrackerView: View {
                 },
                 onSelect: { objective in
                     isShowingArchivedObjectives = false
+                    bindableViewModel.trackAction(TrackingEvent.SessionTracker.Action(value: .editObjective(id: objective.id)))
                     objectiveSheetViewModel = AddObjectiveSheetViewModel(
                         mode: .edit(objective),
                         defaultColor: ObjectiveColorProvider.color(for: objective)
@@ -170,6 +180,7 @@ struct SessionTrackerView: View {
                 Spacer()
                 if viewModel.hasArchivedObjectives {
                     Button {
+                        viewModel.trackAction(TrackingEvent.SessionTracker.Action(value: .showArchivedObjectives))
                         isShowingArchivedObjectives = true
                     } label: {
                         Label("Archived", systemImage: "archivebox")
@@ -186,6 +197,7 @@ struct SessionTrackerView: View {
             .padding(.horizontal, 20)
             if viewModel.activeObjectives.isEmpty {
                 AddObjectiveCircleButton {
+                    viewModel.trackAction(TrackingEvent.SessionTracker.Action(value: .showAddObjective(.emptyState)))
                     objectiveSheetViewModel = AddObjectiveSheetViewModel()
                 }
                 .padding(.horizontal, 20)
@@ -193,9 +205,11 @@ struct SessionTrackerView: View {
                 ObjectiveCardView(
                     objectives: viewModel.activeObjectives,
                     onAddObjective: {
+                        viewModel.trackAction(TrackingEvent.SessionTracker.Action(value: .showAddObjective(.activeObjectives)))
                         objectiveSheetViewModel = AddObjectiveSheetViewModel()
                     },
                     onSelectObjective: { objective in
+                        viewModel.trackAction(TrackingEvent.SessionTracker.Action(value: .editObjective(id: objective.id)))
                         objectiveSheetViewModel = AddObjectiveSheetViewModel(
                             mode: .edit(objective),
                             defaultColor: ObjectiveColorProvider.color(for: objective)

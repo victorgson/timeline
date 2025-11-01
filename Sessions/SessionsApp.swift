@@ -11,8 +11,8 @@ struct SessionsApp: App {
     init() {
         FirebaseApp.configure()
 
-        lazy var trackerDispatcher: TrackerDispatcher = DefaultTrackerDispatcher(
-            trackers: [FirebaseTracker()]
+        let trackerDispatcher = DefaultTrackerDispatcher(
+            trackers: [FirebaseTracker(), LogFirebaseTracker()]
         )
 
         let isPremiumEnabled = false
@@ -20,9 +20,16 @@ struct SessionsApp: App {
         let persistence = PersistenceController(isPremiumEnabled: isPremiumEnabled)
         let repository = CoreDataSessionTrackerRepository(persistenceController: persistence)
         let useCases = SessionTrackerUseCases.make(repository: repository)
+        let hapticBox = DefaultHapticBox()
+        let liveActivityController = DefaultSessionLiveActivityController()
 
         _sessionTrackerViewModel = State(
-            initialValue: SessionTrackerViewModel(useCases: useCases)
+            initialValue: SessionTrackerViewModel(
+                useCases: useCases,
+                trackerDispatcher: trackerDispatcher,
+                hapticBox: hapticBox,
+                liveActivityController: liveActivityController
+            )
         )
     }
 

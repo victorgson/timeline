@@ -1,4 +1,5 @@
 import Foundation
+import Tracking
 
 @MainActor
 extension SessionTrackerViewModel {
@@ -13,7 +14,8 @@ extension SessionTrackerViewModel {
     func startSession(now: Date = .now) {
         guard sessionStartDate == nil else { return }
         sessionStartDate = now
-        haptics.triggerImpact(style: DefaultHapticBox.Impact.medium)
+        trackAction(TrackingEvent.SessionTracker.Action(value: .startSession))
+        hapticBox.triggerImpact(style: DefaultHapticBox.Impact.medium)
         Task {
             await liveActivityController.startLiveActivity(startDate: now)
         }
@@ -21,6 +23,7 @@ extension SessionTrackerViewModel {
 
     func stopSession(now: Date = .now) {
         guard let start = sessionStartDate else { return }
+        trackAction(TrackingEvent.SessionTracker.Action(value: .stopSession))
         let duration = now.timeIntervalSince(start)
         sessionStartDate = nil
         Task {
@@ -39,12 +42,15 @@ extension SessionTrackerViewModel {
             note: "",
             tagsText: ""
         )
-        haptics.triggerImpact(style: DefaultHapticBox.Impact.light)
+        trackAction(TrackingEvent.SessionTracker.Action(value: .openActivityDraft(.new)))
+        hapticBox.triggerImpact(style: DefaultHapticBox.Impact.light)
     }
 
     func discardDraft() {
+        guard let draft = activityDraft else { return }
         activityDraft = nil
-        haptics.triggerNotification(DefaultHapticBox.Notification.warning)
+        trackAction(TrackingEvent.SessionTracker.Action(value: .discardActivityDraft(isEditing: draft.isEditing)))
+        hapticBox.triggerNotification(DefaultHapticBox.Notification.warning)
     }
 
     func formattedDuration(_ duration: TimeInterval) -> String {

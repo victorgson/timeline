@@ -1,11 +1,13 @@
 import Foundation
 import Observation
+import Tracking
 
 @MainActor
 @Observable
 final class SessionTrackerViewModel {
     let useCases: SessionTrackerUseCases
-    let haptics: HapticBox
+    let trackerDispatcher: TrackerDispatcher
+    let hapticBox: HapticBox
     let liveActivityController: any SessionLiveActivityControlling
 
     var objectives: [Objective]
@@ -24,12 +26,14 @@ final class SessionTrackerViewModel {
 
     init(
         useCases: SessionTrackerUseCases,
-        haptics: HapticBox? = nil,
-        liveActivityController: (any SessionLiveActivityControlling)? = nil
+        trackerDispatcher: TrackerDispatcher,
+        hapticBox: HapticBox,
+        liveActivityController: SessionLiveActivityControlling
     ) {
         self.useCases = useCases
-        self.haptics = haptics ?? DefaultHapticBox()
-        self.liveActivityController = liveActivityController ?? SessionLiveActivityControllerFactory.make()
+        self.trackerDispatcher = trackerDispatcher
+        self.hapticBox = hapticBox
+        self.liveActivityController = liveActivityController
         self.objectives = []
         self.activities = []
 
@@ -79,5 +83,11 @@ final class SessionTrackerViewModel {
                 assertionFailure("Failed to unarchive objective: \(error)")
             }
         }
+    }
+}
+
+extension SessionTrackerViewModel: ActionTracking, PageTracking {
+    var pageViewEvent: TrackablePageEvent {
+        TrackingEvent.SessionTracker.Page()
     }
 }

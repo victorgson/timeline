@@ -24,7 +24,7 @@ extension SessionTrackerViewModel {
         }
 
         Task { await deleteObjectiveAsync(id: id) }
-        haptics.triggerNotification(DefaultHapticBox.Notification.warning)
+        hapticBox.triggerNotification(DefaultHapticBox.Notification.warning)
     }
 
     func label(for activity: Activity, calendar: Calendar = .current) -> String {

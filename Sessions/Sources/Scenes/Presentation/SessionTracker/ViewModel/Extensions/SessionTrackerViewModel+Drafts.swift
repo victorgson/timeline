@@ -1,9 +1,11 @@
 import Foundation
+import Tracking
 
 @MainActor
 extension SessionTrackerViewModel {
     func saveDraft(now: Date = .now) {
         guard let draft = activityDraft else { return }
+        trackAction(TrackingEvent.SessionTracker.Action(value: .saveActivityDraft(isEditing: draft.isEditing)))
         Task { await saveDraftAsync(draft: draft) }
     }
 
@@ -47,7 +49,7 @@ extension SessionTrackerViewModel {
         activityDraft = draft
 
         if previous != clamped {
-            haptics.triggerImpact(style: DefaultHapticBox.Impact.light)
+            hapticBox.triggerImpact(style: DefaultHapticBox.Impact.light)
         }
     }
 
@@ -60,6 +62,7 @@ extension SessionTrackerViewModel {
     }
 
     func editActivity(_ activity: Activity) {
+        trackAction(TrackingEvent.SessionTracker.Action(value: .openActivityDraft(.edit)))
         var allocations: [UUID: TimeInterval] = [:]
         for allocation in activity.keyResultAllocations {
             allocations[allocation.keyResultID] = allocation.seconds
@@ -146,7 +149,7 @@ private extension SessionTrackerViewModel {
         }
 
         activityDraft = nil
-        haptics.triggerNotification(DefaultHapticBox.Notification.success)
+        hapticBox.triggerNotification(DefaultHapticBox.Notification.success)
     }
 
     static func tags(from text: String) -> [String] {
