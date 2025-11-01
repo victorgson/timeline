@@ -85,6 +85,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Sources/Application/LiveActivities/SessionLiveActivityController.swift,
+				Sources/Scenes/Presentation/Support/TimelinePalette.swift,
 			);
 			target = 6A2E5E2E2EB163C9000FBAE6 /* SessionsLiveActivity */;
 		};
@@ -118,6 +119,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Sources/Application/LiveActivities/SessionLiveActivityController.swift,
+				Sources/Scenes/Presentation/Support/TimelinePalette.swift,
 			);
 			target = 6A614DE42EB66CD9006AF339 /* SessionsLiveActivityDev */;
 		};

@@ -12,7 +12,7 @@ struct SessionDetailView: View {
 
     var body: some View {
         ZStack {
-            gradient
+            TimelinePalette.sessionGradient
                 .ignoresSafeArea()
 
             VStack(spacing: 32) {
@@ -52,11 +52,4 @@ struct SessionDetailView: View {
         }
     }
 
-    private var gradient: LinearGradient {
-        LinearGradient(
-            colors: [Color.indigo.opacity(0.9), Color.purple.opacity(0.85)],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-    }
 }

@@ -70,16 +70,7 @@ private extension InsightsView {
 
         ZStack {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            Color.indigo.opacity(0.92),
-                            Color.purple.opacity(0.85)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+                .fill(TimelinePalette.sessionGradient)
                 .overlay(
                     RoundedRectangle(cornerRadius: 24, style: .continuous)
                         .stroke(Color.white.opacity(0.12), lineWidth: 1)
@@ -298,16 +289,7 @@ private extension InsightsView {
                                     .font(.caption2)
                                     .foregroundStyle(.secondary)
                                 Capsule(style: .continuous)
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [
-                                                Color.indigo.opacity(0.85),
-                                                Color.blue.opacity(0.75)
-                                            ],
-                                            startPoint: .top,
-                                            endPoint: .bottom
-                                        )
-                                    )
+                                    .fill(TimelinePalette.sessionGradientVertical)
                                     .frame(width: 16, height: barHeight)
                                 Text(stat.label.uppercased())
                                     .font(.caption2.weight(.semibold))
