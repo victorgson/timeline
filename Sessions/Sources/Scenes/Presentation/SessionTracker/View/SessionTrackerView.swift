@@ -16,6 +16,11 @@ struct SessionTrackerView: View {
 
         NavigationStack {
             List {
+                
+                Button("Crash") {
+                  fatalError("Crash was triggered")
+                }
+                
                 Section {
                     objectivesSection(viewModel: bindableViewModel)
                         .listRowInsets(EdgeInsets(top: 24, leading: 0, bottom: 8, trailing: 0))
