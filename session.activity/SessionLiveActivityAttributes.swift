@@ -1,12 +1,15 @@
-#if canImport(ActivityKit)
 import ActivityKit
-#endif
 import Foundation
 
-#if canImport(ActivityKit)
 @available(iOS 16.1, *)
 struct SessionLiveActivityAttributes: ActivityAttributes {
-    struct ContentState: Codable, Hashable {}
+    struct ContentState: Codable, Hashable {
+        var timerRange: ClosedRange<Date>
+
+        init(timerRange: ClosedRange<Date>) {
+            self.timerRange = timerRange
+        }
+    }
 
     let id: UUID
     let startDate: Date
@@ -16,4 +19,3 @@ struct SessionLiveActivityAttributes: ActivityAttributes {
         self.startDate = startDate
     }
 }
-#endif

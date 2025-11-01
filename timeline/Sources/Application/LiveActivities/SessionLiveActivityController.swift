@@ -5,12 +5,6 @@ protocol SessionLiveActivityControlling: AnyObject {
     func endLiveActivity() async
 }
 
-final class NoopSessionLiveActivityController: SessionLiveActivityControlling {
-    func startLiveActivity(startDate: Date) async {}
-    func endLiveActivity() async {}
-}
-
-#if canImport(ActivityKit)
 import ActivityKit
 
 @available(iOS 16.1, *)
@@ -30,7 +24,9 @@ final class DefaultSessionLiveActivityController: SessionLiveActivityControlling
         await endDanglingActivities()
 
         let attributes = SessionLiveActivityAttributes(startDate: startDate)
-        let contentState = SessionLiveActivityAttributes.ContentState()
+        let contentState = SessionLiveActivityAttributes.ContentState(
+            timerRange: startDate...Date.distantFuture
+        )
         let content = ActivityContent(state: contentState, staleDate: nil)
 
         do {
@@ -42,8 +38,9 @@ final class DefaultSessionLiveActivityController: SessionLiveActivityControlling
 
     func endLiveActivity() async {
         guard let activity = currentActivity else { return }
+        let timerRange = activity.attributes.startDate...Date()
         let content = ActivityContent(
-            state: SessionLiveActivityAttributes.ContentState(),
+            state: SessionLiveActivityAttributes.ContentState(timerRange: timerRange),
             staleDate: nil
         )
         await activity.end(content, dismissalPolicy: .immediate)
@@ -53,23 +50,19 @@ final class DefaultSessionLiveActivityController: SessionLiveActivityControlling
     private func endDanglingActivities() async {
         let activeActivities = SessionActivity.activities
         for activity in activeActivities where activity.id != currentActivity?.id {
+            let timerRange = activity.attributes.startDate...Date()
             let content = ActivityContent(
-                state: SessionLiveActivityAttributes.ContentState(),
+                state: SessionLiveActivityAttributes.ContentState(timerRange: timerRange),
                 staleDate: nil
             )
             await activity.end(content, dismissalPolicy: .immediate)
         }
     }
 }
-#endif
+
 
 enum SessionLiveActivityControllerFactory {
-    static func make() -> any SessionLiveActivityControlling {
-#if canImport(ActivityKit)
-        if #available(iOS 16.1, *) {
-            return DefaultSessionLiveActivityController()
-        }
-#endif
-        return NoopSessionLiveActivityController()
+    static func make() -> SessionLiveActivityControlling {
+        return DefaultSessionLiveActivityController()
     }
 }

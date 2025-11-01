@@ -9,11 +9,17 @@ final class AddObjectiveSheetViewModel {
 
     var title: String
     var color: Color
-    var isEndDateEnabled: Bool
+    var endDatePreset: EndDatePreset {
+        didSet {
+            guard endDatePreset != oldValue else { return }
+            applyPreset(endDatePreset)
+        }
+    }
     var endDate: Date
     var keyResults: [KeyResultForm]
     private(set) var completedAt: Date?
     private(set) var archivedAt: Date?
+    private var isAdjustingEndDatePreset = false
 
     init(
         mode: Mode = .create,
@@ -25,16 +31,18 @@ final class AddObjectiveSheetViewModel {
         case .create:
             self.title = ""
             self.color = defaultColor
-            self.isEndDateEnabled = false
             self.endDate = .now
+            self.endDatePreset = .none
             self.keyResults = [KeyResultForm(metricType: .quantity)]
             self.completedAt = nil
             self.archivedAt = nil
         case .edit(let objective):
             self.title = objective.title
             self.color = Color(hex: objective.colorHex ?? "") ?? defaultColor
-            self.isEndDateEnabled = objective.endDate != nil
             self.endDate = objective.endDate ?? .now
+            isAdjustingEndDatePreset = true
+            self.endDatePreset = Self.preset(for: objective.endDate)
+            isAdjustingEndDatePreset = false
             self.completedAt = objective.completedAt
             self.archivedAt = objective.archivedAt
             self.keyResults = objective.keyResults.map { keyResult in
@@ -100,7 +108,7 @@ final class AddObjectiveSheetViewModel {
     }
 
     var preparedEndDate: Date? {
-        isEndDateEnabled ? endDate : nil
+        endDatePreset == .none ? nil : endDate
     }
 
     var isCompleted: Bool {
@@ -181,6 +189,79 @@ final class AddObjectiveSheetViewModel {
         formatter.timeStyle = .short
         return formatter
     }()
+
+    private func applyPreset(
+        _ preset: EndDatePreset,
+        now: Date = .now,
+        calendar: Calendar = .current
+    ) {
+        guard !isAdjustingEndDatePreset else { return }
+        isAdjustingEndDatePreset = true
+        defer { isAdjustingEndDatePreset = false }
+
+        switch preset {
+        case .none:
+            break
+        case .monthly:
+            endDate = calendar.date(byAdding: .month, value: 1, to: now) ?? now
+        case .quarterly:
+            endDate = calendar.date(byAdding: .month, value: 3, to: now) ?? now
+        case .yearly:
+            endDate = calendar.date(byAdding: .year, value: 1, to: now) ?? now
+        }
+    }
+}
+
+extension AddObjectiveSheetViewModel {
+    enum EndDatePreset: String, CaseIterable, Identifiable {
+        case none
+        case monthly
+        case quarterly
+        case yearly
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .none:
+                return "None"
+            case .monthly:
+                return "Monthly"
+            case .quarterly:
+                return "Quarterly"
+            case .yearly:
+                return "Yearly"
+            }
+        }
+    }
+
+    private static func preset(
+        for endDate: Date?,
+        reference: Date = .now,
+        calendar: Calendar = .current
+    ) -> EndDatePreset {
+        guard let endDate else { return .none }
+
+        let start = calendar.startOfDay(for: reference)
+        let target = calendar.startOfDay(for: endDate)
+
+        guard let months = calendar.dateComponents([.month], from: start, to: target).month else {
+            return .monthly
+        }
+
+        switch months {
+        case Int.min...0:
+            return .monthly
+        case 1:
+            return .monthly
+        case 2...5:
+            return .quarterly
+        case 6...11:
+            return .yearly
+        default:
+            return .yearly
+        }
+    }
 }
 
 extension AddObjectiveSheetViewModel: Identifiable {

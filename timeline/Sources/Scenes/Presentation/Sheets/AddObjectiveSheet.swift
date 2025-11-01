@@ -106,18 +106,22 @@ struct AddObjectiveSheet: View {
                                 autocapitalization: .words
                             )
 
-                            VStack(alignment: .leading, spacing: 12) {
-                                Toggle(isOn: $viewModel.isEndDateEnabled.animation()) {
-                                    Text("Set End Date")
-                                        .sheetCardLabelStyle()
-                                }
-                                .tint(.accentColor)
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text("End Date")
+                                    .sheetCardLabelStyle()
 
-                                Text("Track a deadline for this objective.")
+                                Picker("End Date", selection: $viewModel.endDatePreset) {
+                                    ForEach(AddObjectiveSheetViewModel.EndDatePreset.allCases) { preset in
+                                        Text(preset.displayName).tag(preset)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+
+                                Text("Pick a timeline preset and adjust the exact due date if needed.")
                                     .font(.footnote)
                                     .foregroundStyle(.secondary)
 
-                                if viewModel.isEndDateEnabled {
+                                if viewModel.endDatePreset != .none {
                                     DatePicker(
                                         "Objective End Date",
                                         selection: $viewModel.endDate,
