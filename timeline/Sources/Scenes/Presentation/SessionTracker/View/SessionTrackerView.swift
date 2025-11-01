@@ -120,6 +120,11 @@ struct SessionTrackerView: View {
                     bindableViewModel.unarchiveObjective(withID: id)
                 }
                 objectiveSheetViewModel = nil
+            } onDelete: {
+                if let id = sheetViewModel.objectiveID {
+                    bindableViewModel.deleteObjective(withID: id)
+                }
+                objectiveSheetViewModel = nil
             }
         }
         .sheet(isPresented: $isShowingArchivedObjectives) {

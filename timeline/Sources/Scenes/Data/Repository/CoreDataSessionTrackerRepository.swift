@@ -90,6 +90,30 @@ final class CoreDataSessionTrackerRepository: SessionTrackerRepository {
         return objective
     }
 
+    func removeObjective(withID id: UUID) async throws {
+        try await performOnViewContext { context in
+            guard let objective = try Self.fetchObjectiveEntity(id: id, in: context) else { return }
+
+            let keyResultIDs = Set(objective.keyResultsSet.compactMap(\.id))
+
+            if !keyResultIDs.isEmpty {
+                for activity in objective.activitiesSet {
+                    let allocationsToRemove = activity.allocationsSet.filter { allocation in
+                        guard let keyResultID = allocation.keyResultID else { return false }
+                        return keyResultIDs.contains(keyResultID)
+                    }
+                    allocationsToRemove.forEach { context.delete($0) }
+                    activity.objective = nil
+                }
+            } else {
+                objective.activitiesSet.forEach { $0.objective = nil }
+            }
+
+            context.delete(objective)
+            try Self.saveIfNeeded(context: context)
+        }
+    }
+
     // MARK: - Sessions
 
     func fetchSessions() async throws -> [Session] {

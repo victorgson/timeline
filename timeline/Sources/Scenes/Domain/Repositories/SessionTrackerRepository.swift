@@ -4,6 +4,7 @@ protocol SessionTrackerRepository {
     func loadObjectives() async throws -> [Objective]
     func loadActivities() async throws -> [Activity]
     func upsertObjective(_ objective: Objective) async throws
+    func removeObjective(withID id: UUID) async throws
     func recordActivity(_ activity: Activity) async throws
     func updateActivity(_ activity: Activity) async throws
     func removeActivity(withID id: UUID) async throws

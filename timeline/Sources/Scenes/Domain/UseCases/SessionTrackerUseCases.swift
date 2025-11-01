@@ -3,6 +3,7 @@ struct SessionTrackerUseCases {
     let loadActivities: DefaultLoadActivitiesUseCase
     let upsertObjective: DefaultUpsertObjectiveUseCase
     let createObjective: DefaultCreateObjectiveUseCase
+    let removeObjective: DefaultRemoveObjectiveUseCase
     let recordActivity: DefaultRecordActivityUseCase
     let updateActivity: DefaultUpdateActivityUseCase
     let removeActivity: DefaultRemoveActivityUseCase
@@ -17,6 +18,7 @@ struct SessionTrackerUseCases {
             loadActivities: DefaultLoadActivitiesUseCase(repository: repository),
             upsertObjective: DefaultUpsertObjectiveUseCase(repository: repository),
             createObjective: DefaultCreateObjectiveUseCase(repository: repository),
+            removeObjective: DefaultRemoveObjectiveUseCase(repository: repository),
             recordActivity: DefaultRecordActivityUseCase(repository: repository),
             updateActivity: DefaultUpdateActivityUseCase(repository: repository),
             removeActivity: DefaultRemoveActivityUseCase(repository: repository),

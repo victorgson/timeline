@@ -6,6 +6,27 @@ extension SessionTrackerViewModel {
         Task { await handleObjectiveSubmissionAsync(submission) }
     }
 
+    func deleteObjective(withID id: UUID) {
+        guard let index = objectives.firstIndex(where: { $0.id == id }) else { return }
+        objectives.remove(at: index)
+
+        for activityIndex in activities.indices {
+            guard activities[activityIndex].linkedObjectiveID == id else { continue }
+            activities[activityIndex].linkedObjectiveID = nil
+            activities[activityIndex].keyResultAllocations.removeAll()
+        }
+
+        if var draft = activityDraft, draft.selectedObjectiveID == id {
+            draft.selectedObjectiveID = nil
+            draft.selectedTimeAllocations = [:]
+            draft.quantityValues = [:]
+            activityDraft = draft
+        }
+
+        Task { await deleteObjectiveAsync(id: id) }
+        haptics.triggerNotification(DefaultHapticBox.Notification.warning)
+    }
+
     func label(for activity: Activity, calendar: Calendar = .current) -> String {
         guard let objectiveID = activity.linkedObjectiveID,
               let objective = objectives.first(where: { $0.id == objectiveID }) else {
@@ -60,6 +81,16 @@ private extension SessionTrackerViewModel {
             objectives = try await useCases.loadObjectives.execute()
         } catch {
             assertionFailure("Failed to create objective: \(error)")
+        }
+    }
+
+    func deleteObjectiveAsync(id: UUID) async {
+        do {
+            try await useCases.removeObjective.execute(id)
+            objectives = try await useCases.loadObjectives.execute()
+            activities = try await useCases.loadActivities.execute()
+        } catch {
+            assertionFailure("Failed to delete objective: \(error)")
         }
     }
 }

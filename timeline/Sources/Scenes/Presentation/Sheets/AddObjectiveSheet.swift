@@ -8,19 +8,22 @@ struct AddObjectiveSheet: View {
     let onCancel: () -> Void
     let onArchive: (() -> Void)?
     let onUnarchive: (() -> Void)?
+    let onDelete: (() -> Void)?
 
     init(
         viewModel: AddObjectiveSheetViewModel = AddObjectiveSheetViewModel(),
         onSave: @escaping (ObjectiveFormSubmission) -> Void,
         onCancel: @escaping () -> Void,
         onArchive: (() -> Void)? = nil,
-        onUnarchive: (() -> Void)? = nil
+        onUnarchive: (() -> Void)? = nil,
+        onDelete: (() -> Void)? = nil
     ) {
         self.viewModel = viewModel
         self.onSave = onSave
         self.onCancel = onCancel
         self.onArchive = onArchive
         self.onUnarchive = onUnarchive
+        self.onDelete = onDelete
     }
 
     var body: some View {
@@ -193,6 +196,28 @@ struct AddObjectiveSheet: View {
                     )
                     .foregroundColor(.accentColor)
                     .padding(.top, 8)
+
+                    if viewModel.isEditing, onDelete != nil {
+                        Button(role: .destructive) {
+                            onDelete?()
+                        } label: {
+                            Text("Delete Objective")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 14)
+                        }
+                        .buttonStyle(.plain)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(Color(.systemRed).opacity(0.12))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .stroke(Color(.systemRed).opacity(0.4), lineWidth: 1)
+                        )
+                        .foregroundColor(Color(.systemRed))
+                        .padding(.top, 16)
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 24)
