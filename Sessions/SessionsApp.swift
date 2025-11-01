@@ -1,5 +1,7 @@
 import SwiftUI
 import FirebaseCore
+import Tracking
+import TrackingFirebase
 
 @main
 @MainActor
@@ -8,6 +10,10 @@ struct SessionsApp: App {
 
     init() {
         FirebaseApp.configure()
+
+        lazy var trackerDispatcher: TrackerDispatcher = DefaultTrackerDispatcher(
+            trackers: [FirebaseTracker()]
+        )
 
         let isPremiumEnabled = false
         // Replace the hard-coded flag above with the real entitlement state from StoreKit / RevenueCat.

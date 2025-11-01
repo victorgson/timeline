@@ -15,8 +15,10 @@
 		6A614DF02EB66D35006AF339 /* SessionsLiveActivityDev.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6A614DED2EB66CD9006AF339 /* SessionsLiveActivityDev.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6A614E4E2EB6771A006AF339 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6A614E4D2EB6771A006AF339 /* FirebaseCrashlytics */; };
 		6A614E522EB67786006AF339 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6A614E512EB67786006AF339 /* FirebaseCrashlytics */; };
-		6A614E5C2EB67E3D006AF339 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6A614E5B2EB67E3D006AF339 /* FirebaseAnalyticsCore */; };
-		6A614E5E2EB67E48006AF339 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6A614E5D2EB67E48006AF339 /* FirebaseAnalyticsCore */; };
+		6A6150452EB67FE1006AF339 /* Tracking in Frameworks */ = {isa = PBXBuildFile; productRef = 6A6150442EB67FE1006AF339 /* Tracking */; };
+		6A6150472EB67FE5006AF339 /* Tracking in Frameworks */ = {isa = PBXBuildFile; productRef = 6A6150462EB67FE5006AF339 /* Tracking */; };
+		6A6150492EB6808D006AF339 /* TrackingFirebase in Frameworks */ = {isa = PBXBuildFile; productRef = 6A6150482EB6808D006AF339 /* TrackingFirebase */; };
+		6A61504B2EB68091006AF339 /* TrackingFirebase in Frameworks */ = {isa = PBXBuildFile; productRef = 6A61504A2EB68091006AF339 /* TrackingFirebase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +130,22 @@
 			);
 			target = 6A614DD52EB66BF1006AF339 /* SessionsDev */;
 		};
+		6A61503E2EB67F71006AF339 /* Exceptions for "Packages" folder in "Sessions" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Tracking,
+				TrackingFirebase,
+			);
+			target = 37E868962EA1AAEC00B92107 /* Sessions */;
+		};
+		6A61503F2EB67F71006AF339 /* Exceptions for "Packages" folder in "SessionsDev" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Tracking,
+				TrackingFirebase,
+			);
+			target = 6A614DD52EB66BF1006AF339 /* SessionsDev */;
+		};
 		6AD988662EAC2AFD00BF64E2 /* Exceptions for "Sessions" folder in "Sessions" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -162,6 +180,15 @@
 			path = LiveActivity;
 			sourceTree = "<group>";
 		};
+		6A61503B2EB67F6E006AF339 /* Packages */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6A61503E2EB67F71006AF339 /* Exceptions for "Packages" folder in "Sessions" target */,
+				6A61503F2EB67F71006AF339 /* Exceptions for "Packages" folder in "SessionsDev" target */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,8 +196,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A61504B2EB68091006AF339 /* TrackingFirebase in Frameworks */,
 				6A614E522EB67786006AF339 /* FirebaseCrashlytics in Frameworks */,
-				6A614E5E2EB67E48006AF339 /* FirebaseAnalyticsCore in Frameworks */,
+				6A6150452EB67FE1006AF339 /* Tracking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,8 +215,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6A614E5C2EB67E3D006AF339 /* FirebaseAnalyticsCore in Frameworks */,
+				6A6150492EB6808D006AF339 /* TrackingFirebase in Frameworks */,
 				6A614E4E2EB6771A006AF339 /* FirebaseCrashlytics in Frameworks */,
+				6A6150472EB67FE5006AF339 /* Tracking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +236,7 @@
 		37E8688E2EA1AAEC00B92107 = {
 			isa = PBXGroup;
 			children = (
+				6A61503B2EB67F6E006AF339 /* Packages */,
 				37E868992EA1AAEC00B92107 /* Sessions */,
 				6A2E5E352EB163C9000FBAE6 /* LiveActivity */,
 				6A2E5E302EB163C9000FBAE6 /* Frameworks */,
@@ -255,11 +285,13 @@
 			);
 			fileSystemSynchronizedGroups = (
 				37E868992EA1AAEC00B92107 /* Sessions */,
+				6A61503B2EB67F6E006AF339 /* Packages */,
 			);
 			name = Sessions;
 			packageProductDependencies = (
 				6A614E512EB67786006AF339 /* FirebaseCrashlytics */,
-				6A614E5D2EB67E48006AF339 /* FirebaseAnalyticsCore */,
+				6A6150442EB67FE1006AF339 /* Tracking */,
+				6A61504A2EB68091006AF339 /* TrackingFirebase */,
 			);
 			productName = timeline;
 			productReference = 37E868972EA1AAEC00B92107 /* Sessions.app */;
@@ -305,11 +337,13 @@
 			);
 			fileSystemSynchronizedGroups = (
 				37E868992EA1AAEC00B92107 /* Sessions */,
+				6A61503B2EB67F6E006AF339 /* Packages */,
 			);
 			name = SessionsDev;
 			packageProductDependencies = (
 				6A614E4D2EB6771A006AF339 /* FirebaseCrashlytics */,
-				6A614E5B2EB67E3D006AF339 /* FirebaseAnalyticsCore */,
+				6A6150462EB67FE5006AF339 /* Tracking */,
+				6A6150482EB6808D006AF339 /* TrackingFirebase */,
 			);
 			productName = timeline;
 			productReference = 6A614DE12EB66BF1006AF339 /* SessionsDev.app */;
@@ -1001,15 +1035,21 @@
 			package = 6A614E4C2EB6771A006AF339 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
 		};
-		6A614E5B2EB67E3D006AF339 /* FirebaseAnalyticsCore */ = {
+		6A6150442EB67FE1006AF339 /* Tracking */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6A614E4C2EB6771A006AF339 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalyticsCore;
+			productName = Tracking;
 		};
-		6A614E5D2EB67E48006AF339 /* FirebaseAnalyticsCore */ = {
+		6A6150462EB67FE5006AF339 /* Tracking */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6A614E4C2EB6771A006AF339 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalyticsCore;
+			productName = Tracking;
+		};
+		6A6150482EB6808D006AF339 /* TrackingFirebase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TrackingFirebase;
+		};
+		6A61504A2EB68091006AF339 /* TrackingFirebase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TrackingFirebase;
 		};
 		6AD988E42EAD4B2800BF64E2 /* SwiftLintBuildToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
