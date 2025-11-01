@@ -14,9 +14,9 @@
 		6A614DE82EB66CD9006AF339 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2E5E312EB163C9000FBAE6 /* WidgetKit.framework */; };
 		6A614DF02EB66D35006AF339 /* SessionsLiveActivityDev.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6A614DED2EB66CD9006AF339 /* SessionsLiveActivityDev.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6A614E4E2EB6771A006AF339 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6A614E4D2EB6771A006AF339 /* FirebaseCrashlytics */; };
-		6A614E502EB6777A006AF339 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6A614E4F2EB6777A006AF339 /* FirebaseAnalytics */; };
 		6A614E522EB67786006AF339 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6A614E512EB67786006AF339 /* FirebaseCrashlytics */; };
-		6A614E542EB6778B006AF339 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6A614E532EB6778B006AF339 /* FirebaseAnalytics */; };
+		6A614E5C2EB67E3D006AF339 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6A614E5B2EB67E3D006AF339 /* FirebaseAnalyticsCore */; };
+		6A614E5E2EB67E48006AF339 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6A614E5D2EB67E48006AF339 /* FirebaseAnalyticsCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -169,8 +169,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6A614E542EB6778B006AF339 /* FirebaseAnalytics in Frameworks */,
 				6A614E522EB67786006AF339 /* FirebaseCrashlytics in Frameworks */,
+				6A614E5E2EB67E48006AF339 /* FirebaseAnalyticsCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,7 +187,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6A614E502EB6777A006AF339 /* FirebaseAnalytics in Frameworks */,
+				6A614E5C2EB67E3D006AF339 /* FirebaseAnalyticsCore in Frameworks */,
 				6A614E4E2EB6771A006AF339 /* FirebaseCrashlytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -259,7 +259,7 @@
 			name = Sessions;
 			packageProductDependencies = (
 				6A614E512EB67786006AF339 /* FirebaseCrashlytics */,
-				6A614E532EB6778B006AF339 /* FirebaseAnalytics */,
+				6A614E5D2EB67E48006AF339 /* FirebaseAnalyticsCore */,
 			);
 			productName = timeline;
 			productReference = 37E868972EA1AAEC00B92107 /* Sessions.app */;
@@ -309,7 +309,7 @@
 			name = SessionsDev;
 			packageProductDependencies = (
 				6A614E4D2EB6771A006AF339 /* FirebaseCrashlytics */,
-				6A614E4F2EB6777A006AF339 /* FirebaseAnalytics */,
+				6A614E5B2EB67E3D006AF339 /* FirebaseAnalyticsCore */,
 			);
 			productName = timeline;
 			productReference = 6A614DE12EB66BF1006AF339 /* SessionsDev.app */;
@@ -996,20 +996,20 @@
 			package = 6A614E4C2EB6771A006AF339 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
 		};
-		6A614E4F2EB6777A006AF339 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6A614E4C2EB6771A006AF339 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
 		6A614E512EB67786006AF339 /* FirebaseCrashlytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 6A614E4C2EB6771A006AF339 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
 		};
-		6A614E532EB6778B006AF339 /* FirebaseAnalytics */ = {
+		6A614E5B2EB67E3D006AF339 /* FirebaseAnalyticsCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 6A614E4C2EB6771A006AF339 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
+			productName = FirebaseAnalyticsCore;
+		};
+		6A614E5D2EB67E48006AF339 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6A614E4C2EB6771A006AF339 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
 		};
 		6AD988E42EAD4B2800BF64E2 /* SwiftLintBuildToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
