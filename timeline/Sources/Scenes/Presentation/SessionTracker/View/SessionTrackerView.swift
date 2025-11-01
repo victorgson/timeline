@@ -76,6 +76,17 @@ struct SessionTrackerView: View {
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .statusBarHidden(true)
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        InsightsView(viewModel: bindableViewModel)
+                    } label: {
+                        Label("Insights", systemImage: "chart.bar.doc.horizontal")
+                            .labelStyle(.iconOnly)
+                    }
+                    .accessibilityLabel("Insights")
+                }
+            }
         }
         .sheet(isPresented: Binding(
             get: { bindableViewModel.activityDraft != nil },

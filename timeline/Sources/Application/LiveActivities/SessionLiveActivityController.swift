@@ -60,7 +60,6 @@ final class DefaultSessionLiveActivityController: SessionLiveActivityControlling
     }
 }
 
-
 enum SessionLiveActivityControllerFactory {
     static func make() -> SessionLiveActivityControlling {
         return DefaultSessionLiveActivityController()
