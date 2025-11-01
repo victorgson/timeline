@@ -95,6 +95,7 @@ struct SessionTrackerView: View {
                 }
             }
         }
+        .paywallIfNeeded()
         .onAppear {
             viewModel.trackPageView()
         }

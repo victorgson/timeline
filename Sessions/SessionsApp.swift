@@ -2,6 +2,7 @@ import SwiftUI
 import FirebaseCore
 import Tracking
 import TrackingFirebase
+import RevenueCat
 
 @main
 @MainActor
@@ -14,6 +15,9 @@ struct SessionsApp: App {
         let trackerDispatcher = DefaultTrackerDispatcher(
             trackers: [FirebaseTracker(), LogFirebaseTracker()]
         )
+
+        Purchases.logLevel = .debug
+        Purchases.configure(withAPIKey: "test_XuVymhSmFuWhMzaripgyhEZBhut")
 
         let isPremiumEnabled = false
         // Replace the hard-coded flag above with the real entitlement state from StoreKit / RevenueCat.
