@@ -10,6 +10,9 @@
 		6A2E5E322EB163C9000FBAE6 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2E5E312EB163C9000FBAE6 /* WidgetKit.framework */; };
 		6A2E5E342EB163C9000FBAE6 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2E5E332EB163C9000FBAE6 /* SwiftUI.framework */; };
 		6A2E5E412EB163CA000FBAE6 /* SessionsLiveActivity.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6A2E5E2F2EB163C9000FBAE6 /* SessionsLiveActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6A614DE72EB66CD9006AF339 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2E5E332EB163C9000FBAE6 /* SwiftUI.framework */; };
+		6A614DE82EB66CD9006AF339 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2E5E312EB163C9000FBAE6 /* WidgetKit.framework */; };
+		6A614DF02EB66D35006AF339 /* SessionsLiveActivityDev.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6A614DED2EB66CD9006AF339 /* SessionsLiveActivityDev.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -20,9 +23,27 @@
 			remoteGlobalIDString = 6A2E5E2E2EB163C9000FBAE6;
 			remoteInfo = session.activityExtension;
 		};
+		6A614DF12EB66D35006AF339 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37E8688F2EA1AAEC00B92107 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6A614DE42EB66CD9006AF339;
+			remoteInfo = SessionsLiveActivityDev;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		6A614DF32EB66D35006AF339 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				6A614DF02EB66D35006AF339 /* SessionsLiveActivityDev.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8A7640C62F4F8B0100B12345 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -41,6 +62,8 @@
 		6A2E5E2F2EB163C9000FBAE6 /* SessionsLiveActivity.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SessionsLiveActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A2E5E312EB163C9000FBAE6 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		6A2E5E332EB163C9000FBAE6 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		6A614DE12EB66BF1006AF339 /* SessionsDev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SessionsDev.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A614DED2EB66CD9006AF339 /* SessionsLiveActivityDev.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SessionsLiveActivityDev.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -48,6 +71,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				InfoDev.plist,
 			);
 			target = 6A2E5E2E2EB163C9000FBAE6 /* SessionsLiveActivity */;
 		};
@@ -66,10 +90,44 @@
 			);
 			target = 37E868962EA1AAEC00B92107 /* Sessions */;
 		};
+		6A614DE22EB66BF1006AF339 /* Exceptions for "Sessions" folder in "SessionsDev" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				Info.plist,
+				InfoDev.plist,
+			);
+			target = 6A614DD52EB66BF1006AF339 /* SessionsDev */;
+		};
+		6A614DEE2EB66CD9006AF339 /* Exceptions for "LiveActivity" folder in "SessionsLiveActivityDev" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				Info.plist,
+				InfoDev.plist,
+			);
+			target = 6A614DE42EB66CD9006AF339 /* SessionsLiveActivityDev */;
+		};
+		6A614DF82EB66F27006AF339 /* Exceptions for "Sessions" folder in "SessionsLiveActivityDev" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Sources/Application/LiveActivities/SessionLiveActivityController.swift,
+			);
+			target = 6A614DE42EB66CD9006AF339 /* SessionsLiveActivityDev */;
+		};
+		6A614E452EB66FB8006AF339 /* Exceptions for "LiveActivity" folder in "SessionsDev" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				SessionLiveActivityAttributes.swift,
+				SessionLiveActivityWidget.swift,
+			);
+			target = 6A614DD52EB66BF1006AF339 /* SessionsDev */;
+		};
 		6AD988662EAC2AFD00BF64E2 /* Exceptions for "Sessions" folder in "Sessions" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				InfoDev.plist,
 			);
 			target = 37E868962EA1AAEC00B92107 /* Sessions */;
 		};
@@ -80,7 +138,9 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				6AD988662EAC2AFD00BF64E2 /* Exceptions for "Sessions" folder in "Sessions" target */,
+				6A614DE22EB66BF1006AF339 /* Exceptions for "Sessions" folder in "SessionsDev" target */,
 				6A2E5E4E2EB16405000FBAE6 /* Exceptions for "Sessions" folder in "SessionsLiveActivity" target */,
+				6A614DF82EB66F27006AF339 /* Exceptions for "Sessions" folder in "SessionsLiveActivityDev" target */,
 			);
 			path = Sessions;
 			sourceTree = "<group>";
@@ -89,7 +149,9 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				6A2E5E522EB1641B000FBAE6 /* Exceptions for "LiveActivity" folder in "Sessions" target */,
+				6A614E452EB66FB8006AF339 /* Exceptions for "LiveActivity" folder in "SessionsDev" target */,
 				6A2E5E452EB163CA000FBAE6 /* Exceptions for "LiveActivity" folder in "SessionsLiveActivity" target */,
+				6A614DEE2EB66CD9006AF339 /* Exceptions for "LiveActivity" folder in "SessionsLiveActivityDev" target */,
 			);
 			path = LiveActivity;
 			sourceTree = "<group>";
@@ -113,6 +175,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6A614DDA2EB66BF1006AF339 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A614DE62EB66CD9006AF339 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A614DE72EB66CD9006AF339 /* SwiftUI.framework in Frameworks */,
+				6A614DE82EB66CD9006AF339 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -131,6 +209,8 @@
 			children = (
 				37E868972EA1AAEC00B92107 /* Sessions.app */,
 				6A2E5E2F2EB163C9000FBAE6 /* SessionsLiveActivity.appex */,
+				6A614DE12EB66BF1006AF339 /* SessionsDev.app */,
+				6A614DED2EB66CD9006AF339 /* SessionsLiveActivityDev.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -194,6 +274,53 @@
 			productReference = 6A2E5E2F2EB163C9000FBAE6 /* SessionsLiveActivity.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		6A614DD52EB66BF1006AF339 /* SessionsDev */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6A614DDE2EB66BF1006AF339 /* Build configuration list for PBXNativeTarget "SessionsDev" */;
+			buildPhases = (
+				6A614DD92EB66BF1006AF339 /* Sources */,
+				6A614DDA2EB66BF1006AF339 /* Frameworks */,
+				6A614DDB2EB66BF1006AF339 /* Resources */,
+				6A614DF32EB66D35006AF339 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6A614DD62EB66BF1006AF339 /* PBXTargetDependency */,
+				6A614DF22EB66D35006AF339 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				37E868992EA1AAEC00B92107 /* Sessions */,
+			);
+			name = SessionsDev;
+			packageProductDependencies = (
+			);
+			productName = timeline;
+			productReference = 6A614DE12EB66BF1006AF339 /* SessionsDev.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6A614DE42EB66CD9006AF339 /* SessionsLiveActivityDev */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6A614DEA2EB66CD9006AF339 /* Build configuration list for PBXNativeTarget "SessionsLiveActivityDev" */;
+			buildPhases = (
+				6A614DE52EB66CD9006AF339 /* Sources */,
+				6A614DE62EB66CD9006AF339 /* Frameworks */,
+				6A614DE92EB66CD9006AF339 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				6A2E5E352EB163C9000FBAE6 /* LiveActivity */,
+			);
+			name = SessionsLiveActivityDev;
+			packageProductDependencies = (
+			);
+			productName = session.activityExtension;
+			productReference = 6A614DED2EB66CD9006AF339 /* SessionsLiveActivityDev.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -230,7 +357,9 @@
 			projectRoot = "";
 			targets = (
 				37E868962EA1AAEC00B92107 /* Sessions */,
+				6A614DD52EB66BF1006AF339 /* SessionsDev */,
 				6A2E5E2E2EB163C9000FBAE6 /* SessionsLiveActivity */,
+				6A614DE42EB66CD9006AF339 /* SessionsLiveActivityDev */,
 			);
 		};
 /* End PBXProject section */
@@ -244,6 +373,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		6A2E5E2D2EB163C9000FBAE6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A614DDB2EB66BF1006AF339 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A614DE92EB66CD9006AF339 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -267,6 +410,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6A614DD92EB66BF1006AF339 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A614DE52EB66CD9006AF339 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -274,6 +431,15 @@
 			isa = PBXTargetDependency;
 			target = 6A2E5E2E2EB163C9000FBAE6 /* SessionsLiveActivity */;
 			targetProxy = 6A2E5E3F2EB163CA000FBAE6 /* PBXContainerItemProxy */;
+		};
+		6A614DD62EB66BF1006AF339 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 6AD988E42EAD4B2800BF64E2 /* SwiftLintBuildToolPlugin */;
+		};
+		6A614DF22EB66D35006AF339 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6A614DE42EB66CD9006AF339 /* SessionsLiveActivityDev */;
+			targetProxy = 6A614DF12EB66D35006AF339 /* PBXContainerItemProxy */;
 		};
 		6AD988E52EAD4B2800BF64E2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -337,6 +503,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 0.1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -395,6 +562,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 0.1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -416,6 +584,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sessions/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Sessions;
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -426,7 +595,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -453,6 +622,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sessions/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Sessions;
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -463,7 +633,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -495,7 +665,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp.liveactivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -526,8 +696,146 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp.liveactivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6A614DDF2EB66BF1006AF339 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Sessions/Sessions.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 96G8B7SJ53;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Sessions/InfoDev.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SessionsDev;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6A614DE02EB66BF1006AF339 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Sessions/Sessions.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 96G8B7SJ53;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Sessions/InfoDev.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SessionsDev;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6A614DEB2EB66CD9006AF339 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 96G8B7SJ53;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LiveActivity/InfoDev.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SessionsLiveActivity;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp.dev.liveactivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6A614DEC2EB66CD9006AF339 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 96G8B7SJ53;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LiveActivity/InfoDev.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SessionsLiveActivity;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(MARKETING_VERSION)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.gsonlabs.sessionsapp.dev.liveactivity;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -565,6 +873,24 @@
 			buildConfigurations = (
 				6A2E5E432EB163CA000FBAE6 /* Debug */,
 				6A2E5E442EB163CA000FBAE6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6A614DDE2EB66BF1006AF339 /* Build configuration list for PBXNativeTarget "SessionsDev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A614DDF2EB66BF1006AF339 /* Debug */,
+				6A614DE02EB66BF1006AF339 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6A614DEA2EB66CD9006AF339 /* Build configuration list for PBXNativeTarget "SessionsLiveActivityDev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A614DEB2EB66CD9006AF339 /* Debug */,
+				6A614DEC2EB66CD9006AF339 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
