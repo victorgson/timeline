@@ -30,25 +30,15 @@ struct SessionDetailView: View {
                     .padding(.vertical, 60)
                 }
 
-                Button {
+                Button("End Session") {
                     let stopTime = Date()
                     onStop()
                     dismiss()
                     DispatchQueue.main.async {
                         viewModel.stopSession(now: stopTime)
                     }
-                } label: {
-                    Text("End Session")
-                        .font(.headline)
-                        .padding(.horizontal, 32)
-                        .padding(.vertical, 12)
-                        .background(
-                            Capsule()
-                                .strokeBorder(Color.white.opacity(0.9), lineWidth: 1.5)
-                        )
-                        .foregroundStyle(.white)
                 }
-                .buttonStyle(.plain)
+                .timelineStyle(.outline(.white))
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 40)

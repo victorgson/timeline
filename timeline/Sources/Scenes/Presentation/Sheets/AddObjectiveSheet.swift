@@ -59,20 +59,8 @@ struct AddObjectiveSheet: View {
                                         onArchive?()
                                     } label: {
                                         Label("Move to Archive", systemImage: "archivebox.fill")
-                                            .font(.headline)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 12)
                                     }
-                                    .buttonStyle(.plain)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                            .fill(Color.accentColor.opacity(0.15))
-                                    )
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                            .stroke(Color.accentColor.opacity(0.35), lineWidth: 1)
-                                    )
-                                    .foregroundColor(.accentColor)
+                                    .timelineStyle(.secondary, size: .medium)
                                 }
 
                                 if viewModel.canRestore {
@@ -80,20 +68,8 @@ struct AddObjectiveSheet: View {
                                         onUnarchive?()
                                     } label: {
                                         Label("Restore Objective", systemImage: "arrow.uturn.backward.circle.fill")
-                                            .font(.headline)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 12)
                                     }
-                                    .buttonStyle(.plain)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                            .fill(Color.accentColor.opacity(0.15))
-                                    )
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                            .stroke(Color.accentColor.opacity(0.35), lineWidth: 1)
-                                    )
-                                    .foregroundColor(.accentColor)
+                                    .timelineStyle(.secondary, size: .medium)
                                 }
                             }
                         }
@@ -181,20 +157,8 @@ struct AddObjectiveSheet: View {
                         viewModel.addKeyResult()
                     } label: {
                         Label("Add Key Result", systemImage: "plus.circle.fill")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
                     }
-                    .buttonStyle(.plain)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color.accentColor.opacity(0.12))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(Color.accentColor.opacity(0.4), lineWidth: 1)
-                    )
-                    .foregroundColor(.accentColor)
+                    .timelineStyle(.primary)
                     .padding(.top, 8)
 
                     if viewModel.isEditing, onDelete != nil {
@@ -202,20 +166,8 @@ struct AddObjectiveSheet: View {
                             onDelete?()
                         } label: {
                             Text("Delete Objective")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
                         }
-                        .buttonStyle(.plain)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .fill(Color(.systemRed).opacity(0.12))
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .stroke(Color(.systemRed).opacity(0.4), lineWidth: 1)
-                        )
-                        .foregroundColor(Color(.systemRed))
+                        .timelineStyle(.destructive)
                         .padding(.top, 16)
                     }
                 }

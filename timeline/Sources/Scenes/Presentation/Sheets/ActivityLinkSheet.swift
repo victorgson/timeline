@@ -88,36 +88,15 @@ struct ActivityLinkSheet: View {
                                 onSave()
                             } label: {
                                 Text("Save Session")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 14)
                             }
-                            .buttonStyle(.plain)
-                            .background(
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                    .fill(Color.accentColor)
-                            )
-                            .foregroundStyle(Color(uiColor: .systemBackground))
-                            .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+                            .timelineStyle(.primary)
 
                             Button(role: .destructive) {
                                 onDiscard()
                             } label: {
                                 Text("Discard")
-                                    .font(.subheadline.weight(.semibold))
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 12)
                             }
-                            .buttonStyle(.plain)
-                            .foregroundStyle(.red)
-                            .background(
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                    .fill(Color(uiColor: .systemBackground))
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                    .stroke(Color(uiColor: .separator).opacity(0.2), lineWidth: 1)
-                            )
+                            .timelineStyle(.destructive)
                         }
                     }
                 }

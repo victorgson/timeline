@@ -16,18 +16,8 @@ struct ActiveSessionCard: View {
                     .foregroundStyle(.white)
             }
 
-            Button(action: stopAction) {
-                Text("End Session")
-                    .font(.headline)
-                    .padding(.horizontal, 32)
-                    .padding(.vertical, 12)
-                    .background(
-                        Capsule()
-                            .strokeBorder(Color.white.opacity(0.9), lineWidth: 1.5)
-                    )
-                    .foregroundStyle(.white)
-            }
-            .buttonStyle(.plain)
+            Button("End Session", action: stopAction)
+                .timelineStyle(.outline(.white), layout: .wrap)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 36)

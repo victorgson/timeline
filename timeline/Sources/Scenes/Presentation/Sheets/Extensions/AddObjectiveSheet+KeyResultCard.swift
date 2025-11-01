@@ -48,10 +48,8 @@ extension AddObjectiveSheet {
                             }
                         } label: {
                             Label("Remove Key Result", systemImage: "trash")
-                                .font(.subheadline.weight(.semibold))
                         }
-                        .buttonStyle(.plain)
-                        .foregroundColor(.red)
+                        .timelineStyle(.destructive, size: .medium)
                     }
                 }
             }

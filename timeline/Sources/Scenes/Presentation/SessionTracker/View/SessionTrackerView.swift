@@ -81,7 +81,7 @@ struct SessionTrackerView: View {
                     NavigationLink {
                         InsightsView(viewModel: bindableViewModel)
                     } label: {
-                        Label("Insights", systemImage: "chart.bar.doc.horizontal")
+                        Label("Insights", systemImage: "chart.bar.fill")
                             .labelStyle(.iconOnly)
                     }
                     .accessibilityLabel("Insights")
@@ -173,9 +173,12 @@ struct SessionTrackerView: View {
                     } label: {
                         Label("Archived", systemImage: "archivebox")
                             .labelStyle(TrailingIconLabelStyle())
-                            .font(.subheadline.weight(.semibold))
                     }
-                    .buttonStyle(.plain)
+                    .timelineStyle(
+                        .outline(.accentColor),
+                        size: .medium,
+                        layout: .wrap
+                    )
                     .padding(.trailing, 4)
                 }
             }
